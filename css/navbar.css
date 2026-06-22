@@ -1,0 +1,145 @@
+/* =====================================================================
+   NAVBAR — the fixed top bar present on every screen: brand/logo on the
+   left, the site pages (About / Privacy / Terms / Contact) in the middle,
+   and the colour-theme picker + sound toggle + user-profile avatar on the
+   right.
+
+   The navbar owns the top strip of the viewport, so the floating game
+   chrome (sound button, in-game menu button) is nudged below it here, and
+   the page gets top padding so the hero/board never tuck under the bar.
+===================================================================== */
+
+/* --nav-h is the bar's measured height, published by js/nav.js; the 58px
+   fallback covers the moment before that script runs */
+body{padding-top:calc(var(--nav-h, 58px) + 16px);}
+
+#navbar{
+  position:fixed; top:0; left:0; right:0; z-index:80;
+  height:58px; display:flex; align-items:center; gap:18px;
+  padding:0 clamp(12px,3vw,28px);
+  background:var(--v-nav-bg);
+  backdrop-filter:blur(18px) saturate(1.6);
+  -webkit-backdrop-filter:blur(18px) saturate(1.6);
+  border-bottom:1px solid var(--v-nav-border);
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+
+/* ---- left: clickable brand that always returns you home ---- */
+.nav-brand{
+  display:flex; align-items:center; gap:8px;
+  font-size:clamp(17px,2.2vw,21px); font-weight:600; letter-spacing:-.02em;
+  background:none; border:none; cursor:pointer; padding:6px 4px;
+  white-space:nowrap; text-decoration:none; color:var(--v-ink);
+  font-family:var(--v-sans);
+}
+.nav-brand .nav-logo{
+  font-size:1.25em; filter:drop-shadow(0 1px 2px rgba(0,0,0,.15));
+  animation:navDie 6s ease-in-out infinite;
+}
+@keyframes navDie{
+  0%,88%,100%{transform:rotate(0);} 92%{transform:rotate(-22deg) scale(1.1);} 96%{transform:rotate(18deg);}
+}
+.nav-brand .nav-word{
+  color:var(--v-ink);
+}
+
+/* ---- middle: page links ---- */
+.nav-links{display:flex; align-items:center; gap:4px; margin-left:auto;}
+.nav-link{
+  position:relative; background:none; border:none; cursor:pointer;
+  color:var(--v-body); font-size:14px; font-weight:400; letter-spacing:-.01em;
+  padding:8px 13px; border-radius:9999px; white-space:nowrap;
+  text-decoration:none; display:inline-block; font-family:var(--v-sans);
+  transition:background .15s, color .15s;
+}
+.nav-link:hover{color:var(--v-ink); background:var(--v-canvas-soft-2);}
+/* sliding mesh-gradient underline that grows from the centre on hover / active */
+.nav-link::after{
+  content:""; position:absolute; left:50%; bottom:4px; height:2px; width:0;
+  transform:translateX(-50%); border-radius:2px;
+  background:linear-gradient(90deg, var(--v-g-blue), var(--v-g-violet) 50%, var(--v-g-pink));
+  transition:width .22s ease;
+}
+.nav-link:hover::after{width:55%;}
+.nav-link.active{color:var(--v-ink); font-weight:500;}
+.nav-link.active::after{width:60%;}
+
+/* ---- right: theme picker + sound toggle + profile avatar live as a cluster ---- */
+.nav-right{display:flex; align-items:center; gap:10px; margin-left:8px;}
+
+/* ---- color-theme picker — a round icon button that opens a small popover ---- */
+.nav-theme{position:relative; flex:0 0 auto;}
+#themeBtn{
+  width:38px; height:38px; border-radius:50%; cursor:pointer; padding:0;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+  background:var(--v-canvas); border:1px solid var(--v-hairline); color:var(--v-ink);
+  box-shadow:var(--v-elev-2);
+  transition:transform .15s ease, box-shadow .2s ease, border-color .15s ease;
+}
+#themeBtn:hover{transform:scale(1.06); border-color:var(--v-hairline-strong); box-shadow:var(--v-elev-3);}
+#themeBtn:active{transform:scale(.96);}
+
+.theme-menu{
+  position:absolute; top:calc(100% + 10px); right:0; z-index:90;
+  min-width:182px; padding:6px;
+  background:var(--v-canvas); border:1px solid var(--v-hairline); border-radius:14px;
+  box-shadow:var(--v-elev-5);
+  display:flex; flex-direction:column; gap:2px;
+  animation:themePop .16s ease both;
+}
+.theme-menu[hidden]{display:none;}
+@keyframes themePop{from{opacity:0; transform:translateY(-6px) scale(.98);} to{opacity:1; transform:none;}}
+.theme-menu .theme-head{
+  font-family:var(--v-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--v-mute); padding:6px 10px 4px;
+}
+.theme-opt{
+  display:flex; align-items:center; gap:10px; cursor:pointer; text-align:left;
+  padding:8px 10px; border-radius:9px; border:1px solid transparent; background:none;
+  font-family:var(--v-sans); font-size:14px; color:var(--v-body);
+  transition:background .14s ease, color .14s ease;
+}
+.theme-opt:hover{background:var(--v-canvas-soft-2); color:var(--v-ink);}
+.theme-opt .sw{
+  width:18px; height:18px; border-radius:50%; flex:0 0 auto;
+  background:var(--dot,#fff); border:1px solid rgba(127,127,127,.4);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+}
+.theme-opt[aria-checked="true"]{color:var(--v-ink); font-weight:500; background:var(--v-canvas-soft);}
+.theme-opt[aria-checked="true"] .check{margin-left:auto; color:var(--v-link);}
+.theme-opt .check{margin-left:auto; opacity:0;}
+.theme-opt[aria-checked="true"] .check{opacity:1;}
+
+/* user-profile avatar — a circular icon button (icon-button-circular) */
+.nav-avatar{
+  width:38px; height:38px; border-radius:50%; cursor:pointer; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center; text-decoration:none;
+  font-size:16px; color:var(--v-ink); font-weight:600; font-family:var(--v-sans);
+  background:var(--v-canvas); border:1px solid var(--v-hairline);
+  box-shadow:var(--v-elev-2); overflow:hidden;
+  transition:transform .15s ease, box-shadow .2s ease, border-color .15s ease;
+}
+.nav-avatar:hover{transform:scale(1.06); border-color:var(--v-hairline-strong); box-shadow:var(--v-elev-3);}
+.nav-avatar:active{transform:scale(.96);}
+.nav-avatar.active{outline:2px solid var(--v-ink); outline-offset:2px;}
+/* uploaded profile photo fills the circle */
+.nav-avatar .nav-pfp-img{
+  width:100%; height:100%; border-radius:50%;
+  object-fit:cover; display:block; pointer-events:none;
+}
+
+/* in-game chrome moves below the bar so it doesn't fight the navbar */
+body.in-game .menuBtn{top:calc(var(--nav-h, 58px) + 12px);}
+/* the navbar already carries the brand, so the old floating brand is dropped */
+.brand{display:none !important;}
+
+/* ---- mobile: collapse links into a tidy wrap ---- */
+@media(max-width:680px){
+  #navbar{height:auto; flex-wrap:wrap; padding:8px clamp(10px,3vw,16px); gap:8px;}
+  .nav-links{order:3; width:100%; margin-left:0; justify-content:center; flex-wrap:wrap;}
+  .nav-right{margin-left:auto;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .nav-brand .nav-logo{animation:none;}
+}
