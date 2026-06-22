@@ -316,23 +316,43 @@ function _scrollTop() {
   else window.scrollTo(0, 0);
 }
 
+/* Show a non-blocking inline error inside a container element.
+   Auto-dismisses after 5 s; re-uses the same banner div on repeat calls. */
+function _showOlError(msg, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  let banner = container.querySelector('.ol-error-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.className = 'ol-error-banner';
+    banner.style.cssText =
+      'color:#e74c3c;background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.4);' +
+      'border-radius:8px;padding:9px 14px;font-size:13px;font-family:var(--v-sans);' +
+      'margin-top:10px;width:100%;box-sizing:border-box;';
+    container.appendChild(banner);
+  }
+  banner.textContent = msg;
+  banner.style.display = 'block';
+  clearTimeout(banner._t);
+  banner._t = setTimeout(() => { banner.style.display = 'none'; }, 5000);
+}
+
 /* ---- ENTRY POINT: clicking the Online card ---- */
 function openOnlineLobby() {
   if (typeof Auth !== 'undefined' && !Auth.isLoggedIn()) {
     showAuthModal(openOnlineLobby);
     return;
   }
-  if (!Online.isConfigured()) {
-    alert(
-      'Firebase is not set up yet.\n\n' +
-      'Open js/firebase-config.js and fill in your Firebase project details.\n' +
-      'See the comments in that file for instructions.'
-    );
-    return;
-  }
   document.getElementById('start').style.display = 'none';
   document.getElementById('onlineLobby').style.display = 'flex';
   _scrollTop();
+  if (!Online.isConfigured()) {
+    _showOlError(
+      'Firebase is not set up yet. Open js/firebase-config.js and fill in your project details.',
+      'onlineLobby'
+    );
+    return;
+  }
   setLobbyTab('public');
 }
 
@@ -428,7 +448,7 @@ async function confirmCreateRoom() {
     document.getElementById('onlineLobby').style.display = 'none';
     _enterWaitingRoom(code, _crOpts, true);
   } catch (e) {
-    alert('Could not create room: ' + e.message);
+    _showOlError(e.message, 'createRoomModal');
     btn.disabled = false; btn.textContent = 'Create Room';
   }
 }
@@ -444,7 +464,7 @@ async function onlineJoinRoom(code) {
     document.getElementById('onlineLobby').style.display = 'none';
     _enterWaitingRoom(result.code, result.room, false);
   } catch (e) {
-    alert(e.message);
+    _showOlError(e.message, 'privateRoomPanel');
   }
 }
 
