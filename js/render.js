@@ -88,7 +88,7 @@ function render(){
    the top edge, rows >15 just below the bottom edge, so the die rests on the
    board's outer edge nearest each player. DIE_PAD matches .boardZone's vertical
    padding, which reserves the room the dice need outside the board. */
-const DIE_PAD = 1.4;
+const DIE_PAD = 2.5;
 const DIE_CORNER = { green:[-1,2], yellow:[-1,13], blue:[16,13], red:[16,2] };
 
 /* which of the nine 3x3 grid cells carry a pip, for each face value */
@@ -175,24 +175,20 @@ function renderScores(){
   if(box) box.innerHTML='';
 }
 
-/* Player-identity cards rendered OUTSIDE the board in the boardZone padding
-   strips (green/yellow above, blue/red below).  Each card sits between the
-   player's die and the board edge so it is never over the playing field.
-
-   Positions mirror the die columns from DIE_CORNER (col 2 = green/red,
-   col 13 = yellow/blue).  With boardZone padding 2.5 cells:
-     • top cards:    top  = 1.5 × cell  (0.1 cell gap below die bottom at 1.4)
-     • bottom cards: top  = 18.5 × cell (0.1 cell gap below die bottom at 18.4)
-   transform:translateX(-50%) centres each card on its die column. */
+/* Player-identity cards rendered in side columns flanking the board.
+   #playerSideLeft holds green (top) + red (bottom).
+   #playerSideRight holds yellow (top) + blue (bottom).
+   Cards are flex items; vertical alignment is handled by CSS space-between. */
 function renderPlayerCorners(){
   if(!G) return;
-  const layer=document.getElementById('playerLayer');
-  if(!layer) return;
-  layer.innerHTML='';
+  const left =document.getElementById('playerSideLeft');
+  const right=document.getElementById('playerSideRight');
+  if(!left || !right) return;
+  left.innerHTML='';
+  right.innerHTML='';
 
-  // column lookup shared with DIE_CORNER in render.js
-  const COL={green:2, yellow:13, blue:13, red:2};
-  const TOP={green:'1.5', yellow:'1.5', blue:'18.5', red:'18.5'};
+  // yellow and blue belong to the right column; green and red to the left
+  const RIGHT_SIDE={yellow:true, blue:true};
 
   G.active.forEach(color=>{
     const prof=(G.playerProfiles && G.playerProfiles[color]) ||
@@ -207,13 +203,10 @@ function renderPlayerCorners(){
 
     const card=document.createElement('div');
     card.className='player-corner-card pcc-'+color;
-    card.style.left     =`calc(var(--cell)*${COL[color]})`;
-    card.style.top      =`calc(var(--cell)*${TOP[color]})`;
-    card.style.transform='translateX(-50%)';
     card.innerHTML=
       `<div class="pcc-avatar" style="--pcc-col:var(--${color})">${avatarInner}</div>`+
       `<div class="pcc-name">${safeName}</div>`;
 
-    layer.appendChild(card);
+    (RIGHT_SIDE[color] ? right : left).appendChild(card);
   });
 }
