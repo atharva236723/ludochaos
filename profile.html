@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-98YC21CHJ1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-98YC21CHJ1');
+</script>
+<title>Your Profile — Ludo Chaos</title>
+<meta name="description" content="Customize how you play Ludo Chaos — your name, avatar, colour, difficulty and sound. Everything is saved on your device.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0b0e16">
+<link rel="canonical" href="https://ludochaos.com/profile.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B2%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="css/pages.css">
+<!-- Lenis smooth-scroll engine (CDN) — see js/smooth.js -->
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.1.20/dist/lenis.css">
+</head>
+<body class="doc">
+<main class="page-wrap">
+  <article class="page-card">
+    <div class="profile-top">
+      <div class="profile-pic-wrap" id="avatarWrap" tabindex="0" role="button" aria-label="Change profile photo" title="Upload photo">
+        <div class="profile-pic" id="avatar">G</div>
+        <div class="avatar-overlay" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <input type="file" id="pfpUpload" accept="image/*" hidden>
+      </div>
+      <div>
+        <div class="profile-name" id="pName">Guest Player</div>
+        <div class="profile-tag" id="pTag" hidden></div>
+        <div class="profile-sub">Customize how you play — everything here is saved on this device.</div>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="pstat"><div class="num" id="statGames">0</div><div class="lab">Games</div></div>
+      <div class="pstat"><div class="num" id="statWins">0</div><div class="lab">Wins</div></div>
+      <div class="pstat"><div class="num" id="statRate">0%</div><div class="lab">Win rate</div></div>
+    </div>
+
+    <!-- ---------- identity ---------- -->
+    <h3>Your details <span class="saved-tag" id="savedTag">Saved</span></h3>
+    <div class="pref-field">
+      <label for="prefName">Display name</label>
+      <input id="prefName" type="text" maxlength="20" placeholder="Your name" autocomplete="off">
+    </div>
+    <div class="pref-field">
+      <label for="prefTag">Tagline <span class="hint">— a short motto shown under your name</span></label>
+      <input id="prefTag" type="text" maxlength="42" placeholder="e.g. Roll lucky, play chaos" autocomplete="off">
+    </div>
+    <div class="pref-field">
+      <label>Avatar <span class="hint">— pick an emoji, or leave it on your initial</span></label>
+      <div class="emoji-grid" id="prefAvatar">
+        <button class="emoji-opt" type="button" data-emoji="" title="Use my initial">Aa</button>
+        <button class="emoji-opt" type="button" data-emoji="🎲">🎲</button>
+        <button class="emoji-opt" type="button" data-emoji="🎯">🎯</button>
+        <button class="emoji-opt" type="button" data-emoji="🚀">🚀</button>
+        <button class="emoji-opt" type="button" data-emoji="🐉">🐉</button>
+        <button class="emoji-opt" type="button" data-emoji="🦊">🦊</button>
+        <button class="emoji-opt" type="button" data-emoji="🐼">🐼</button>
+        <button class="emoji-opt" type="button" data-emoji="👑">👑</button>
+        <button class="emoji-opt" type="button" data-emoji="⚡">⚡</button>
+        <button class="emoji-opt" type="button" data-emoji="🔥">🔥</button>
+        <button class="emoji-opt" type="button" data-emoji="🌟">🌟</button>
+        <button class="emoji-opt" type="button" data-emoji="👾">👾</button>
+      </div>
+    </div>
+    <div class="pref-field">
+      <label>Favourite colour <span class="hint">— your avatar &amp; your token in a new game</span></label>
+      <div class="swatches" id="prefColor">
+        <button class="swatch" type="button" data-color="green"  style="--sw:var(--green)"  title="Green"></button>
+        <button class="swatch" type="button" data-color="yellow" style="--sw:var(--yellow)" title="Yellow"></button>
+        <button class="swatch" type="button" data-color="blue"   style="--sw:var(--blue)"   title="Blue"></button>
+        <button class="swatch" type="button" data-color="red"    style="--sw:var(--red)"    title="Red"></button>
+      </div>
+    </div>
+
+    <!-- ---------- appearance ---------- -->
+    <h3>Appearance <span class="hint">— the look of the buttons &amp; glow site-wide</span></h3>
+    <div class="pref-field">
+      <label>Accent theme</label>
+      <div class="swatches" id="prefAccent">
+        <button class="swatch accent-sw" type="button" data-accent="violet"  style="--sw:linear-gradient(120deg,#4d8bff,#7c5cff 50%,#b15cff)" title="Violet"></button>
+        <button class="swatch accent-sw" type="button" data-accent="cyan"    style="--sw:linear-gradient(120deg,#22d3ee,#38bdf8 50%,#6366f1)" title="Cyan"></button>
+        <button class="swatch accent-sw" type="button" data-accent="emerald" style="--sw:linear-gradient(120deg,#34d399,#10b981 50%,#22d3ee)" title="Emerald"></button>
+        <button class="swatch accent-sw" type="button" data-accent="sunset"  style="--sw:linear-gradient(120deg,#fb923c,#f43f5e 50%,#e11d48)" title="Sunset"></button>
+        <button class="swatch accent-sw" type="button" data-accent="rose"    style="--sw:linear-gradient(120deg,#f472b6,#d946ef 50%,#a855f7)" title="Rose"></button>
+      </div>
+    </div>
+
+    <!-- ---------- game defaults ---------- -->
+    <h3>Game defaults <span class="hint">— how the menu opens each time</span></h3>
+    <div class="pref-field">
+      <label>Default mode</label>
+      <div class="seg-pref" id="prefMode">
+        <button class="opt-btn" type="button" data-mode="classic">Classic</button>
+        <button class="opt-btn" type="button" data-mode="chaos">Chaos</button>
+      </div>
+    </div>
+    <div class="pref-field">
+      <label>Players</label>
+      <div class="seg-pref" id="prefPlayers">
+        <button class="opt-btn" type="button" data-n="2">2</button>
+        <button class="opt-btn" type="button" data-n="3">3</button>
+        <button class="opt-btn" type="button" data-n="4">4</button>
+      </div>
+    </div>
+    <div class="pref-field">
+      <label>Opponent</label>
+      <div class="seg-pref" id="prefAI">
+        <button class="opt-btn" type="button" data-ai="1">vs Computer</button>
+        <button class="opt-btn" type="button" data-ai="0">Pass &amp; Play</button>
+      </div>
+    </div>
+
+    <!-- ---------- gameplay ---------- -->
+    <h3>Gameplay <span class="hint">— how a game feels &amp; plays</span></h3>
+    <div class="pref-field">
+      <label>Computer difficulty <span class="hint">— how sharply the AI plays</span></label>
+      <div class="seg-pref" id="prefAILevel">
+        <button class="opt-btn" type="button" data-level="easy">Easy</button>
+        <button class="opt-btn" type="button" data-level="normal">Normal</button>
+        <button class="opt-btn" type="button" data-level="hard">Hard</button>
+      </div>
+    </div>
+    <div class="pref-field">
+      <label>Animation speed <span class="hint">— how fast tokens walk</span></label>
+      <div class="seg-pref" id="prefSpeed">
+        <button class="opt-btn" type="button" data-speed="relaxed">Relaxed</button>
+        <button class="opt-btn" type="button" data-speed="normal">Normal</button>
+        <button class="opt-btn" type="button" data-speed="fast">Fast</button>
+        <button class="opt-btn" type="button" data-speed="instant">Instant</button>
+      </div>
+    </div>
+    <div class="pref-field pref-inline">
+      <label for="prefHighlight">Highlight my legal moves</label>
+      <button class="switch" type="button" id="prefHighlight" role="switch" aria-checked="true"><span></span></button>
+    </div>
+
+    <!-- ---------- sound ---------- -->
+    <h3>Sound</h3>
+    <div class="pref-field pref-inline">
+      <label for="prefSound">Sound effects</label>
+      <button class="switch" type="button" id="prefSound" role="switch" aria-checked="true"><span></span></button>
+    </div>
+    <div class="pref-field">
+      <label for="prefVolume">Volume <span class="hint" id="volLabel">80%</span></label>
+      <input id="prefVolume" class="slider" type="range" min="0" max="100" step="5" value="80">
+    </div>
+
+    <div class="pref-actions">
+      <button class="page-btn btn-save" type="button" id="saveBtn">Save changes</button>
+      <a class="page-btn btn-ghost" href="play.html">Back to the game</a>
+      <button class="page-btn btn-ghost" type="button" id="resetStatsBtn">Reset stats</button>
+      <button class="page-btn btn-ghost" type="button" id="resetBtn">Reset to defaults</button>
+      <button class="page-btn btn-ghost btn-logout" type="button" id="logoutBtn" hidden>Sign out</button>
+    </div>
+  </article>
+</main>
+<script src="js/prefs.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/sound.js"></script>
+<!-- Lenis smooth scrolling — library from CDN, then our init -->
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<script src="js/smooth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/transition.js"></script>
+<!-- profile customization wiring — reads/writes prefs.js, never touches `G` -->
+<script src="js/profile.js"></script>
+</body>
+</html>
