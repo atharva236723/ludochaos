@@ -1,0 +1,110 @@
+/* =====================================================================
+   LANDING PAGE — the intro shown before the menu: a floating, self-playing
+   Ludo board on the left and a big Play button on the right. Purely cosmetic;
+   the board here is driven by js/landing.js and never touches game state.
+===================================================================== */
+
+/* while the landing is up, the menu chrome (hero title, subtitle, mode picker)
+   is hidden — the landing has its own hero on the right */
+body.show-landing > h1,
+body.show-landing > .sub,
+body.show-landing #start{display:none;}
+
+#landing{display:none;}
+body.show-landing #landing{
+  display:flex; align-items:center; justify-content:center;
+  gap:clamp(24px,6vw,80px); width:100%; flex:1;
+  padding:10px; flex-wrap:wrap;
+  /* ensure the hero fills the viewport so the SEO section starts below the fold */
+  min-height:calc(100vh  - var(--nav-h, 58px) - 16px);
+  min-height:calc(100svh - var(--nav-h, 58px) - 16px);
+}
+
+/* ---- left: the floating board stage ---- */
+.lstage{position:relative; display:flex; align-items:center; justify-content:center;}
+/* a soft colored glow pooling behind the board */
+.lstage::before{
+  content:""; position:absolute; inset:-12% -8%;
+  background:radial-gradient(closest-side,
+    rgba(52,152,219,.35), rgba(46,204,113,.18) 55%, transparent 75%);
+  filter:blur(20px); z-index:0; animation:lglow 7s ease-in-out infinite;
+}
+@keyframes lglow{0%,100%{opacity:.7; transform:scale(1);} 50%{opacity:1; transform:scale(1.06);}}
+
+/* the float wrapper bobs and sways forever; the die rides along with it */
+.lfloat{position:relative; z-index:1; animation:lfloat 6s ease-in-out infinite;}
+@keyframes lfloat{
+  0%,100%{transform:translateY(0) rotate(-1.3deg);}
+  50%    {transform:translateY(-20px) rotate(1.3deg);}
+}
+
+/* the decorative board: same look as the real one, but its own smaller cell
+   size and a subtle 3D tilt so it reads as a floating object */
+.lboard{
+  --cell:clamp(14px,2.7vw,25px);
+  transform:perspective(1300px) rotateX(9deg) rotateY(-11deg);
+  box-shadow:0 40px 70px rgba(0,0,0,.6);
+}
+
+/* the rolling die, parked just off the board's top-right corner */
+.ldie{
+  position:absolute; z-index:3; top:calc(var(--cell)*-1.1); right:calc(var(--cell)*-1.4);
+  width:calc(var(--cell)*2.4); height:calc(var(--cell)*2.4);
+  border-radius:18%; background:#fbfbfb;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 22px rgba(0,0,0,.5);
+}
+.ldie .dieFace{width:74%; height:74%;}
+.ldie.roll{animation:ldieRoll .55s cubic-bezier(.34,1.56,.64,1);}
+@keyframes ldieRoll{
+  0%  {transform:rotate(-90deg) scale(.7);}
+  60% {transform:rotate(18deg)  scale(1.12);}
+  100%{transform:rotate(0)      scale(1);}
+}
+
+/* ---- right: the hero copy + Play button ---- */
+.lhero{display:flex; flex-direction:column; align-items:flex-start; gap:16px; max-width:460px;}
+.lkicker{
+  font-family:var(--v-mono); font-size:12px; line-height:16px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--v-body);
+  padding:5px 12px; border:1px solid var(--v-hairline); border-radius:9999px;
+  background:var(--v-chip-bg); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+}
+.ltitle{
+  font-family:var(--v-sans); font-size:clamp(44px,7vw,82px); line-height:.98; font-weight:600;
+  letter-spacing:-.045em; color:var(--v-ink);
+}
+.ltitle span{display:block;}
+.ltagline{font-family:var(--v-sans); font-size:clamp(16px,1.6vw,18px); line-height:1.55; color:var(--v-body);}
+
+/* the Play button — the canonical Vercel black 100px pill (button-primary),
+   marketing scale. The mesh gradient does the decorative work elsewhere; the
+   primary CTA stays a calm ink pill. */
+.play-btn{
+  margin-top:10px; position:relative;
+  display:inline-flex; align-items:center; justify-content:center; gap:10px;
+  padding:0 40px; height:56px; border-radius:9999px; border:1px solid var(--v-ink);
+  font-family:var(--v-sans); font-size:clamp(17px,2.2vw,20px); font-weight:500;
+  letter-spacing:0; text-transform:none;
+  color:var(--v-btn-fg); text-decoration:none; cursor:pointer;
+  background:var(--v-btn-bg);
+  box-shadow:var(--v-elev-3);
+  transition:transform .16s ease, box-shadow .24s ease, background .16s ease;
+}
+.play-btn:hover{
+  transform:translateY(-2px); background:var(--v-btn-bg-hover);
+  box-shadow:0 10px 28px rgba(0,0,0,.22);
+}
+.play-btn:active{transform:translateY(0);}
+
+/* ---- responsive: stack the board over the hero on narrow screens ---- */
+@media(max-width:820px){
+  body.show-landing #landing{flex-direction:column; gap:26px;}
+  .lboard{--cell:clamp(15px,5.4vw,26px); transform:perspective(1300px) rotateX(6deg);}
+  .lhero{align-items:center; text-align:center;}
+}
+
+/* respect users who prefer no motion: hold everything still */
+@media(prefers-reduced-motion:reduce){
+  .lstage::before,.lfloat,.play-btn,.play-btn::before,.ldie.roll{animation:none;}
+}

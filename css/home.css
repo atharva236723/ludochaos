@@ -1,0 +1,193 @@
+/* =====================================================================
+   HOME CONTENT — the SEO / "about" section on the landing page (index.html).
+
+   Sits below the floating-board hero (#landing) as an indexable, keyword-rich
+   surface that also reads as a genuine intro: what Ludo is, plus the two rule
+   sets we ship (Classic and Chaos). Styled in the same Vercel design language
+   as the rest of the site (start-screen / seo tokens). The landing hero owns
+   the first viewport; this scrolls into view beneath it.
+===================================================================== */
+
+#home-seo{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto;
+  padding:clamp(20px,4vw,48px) 4px clamp(40px,6vw,72px);
+  display:flex;
+  flex-direction:column;
+  gap:clamp(22px,3vw,34px);
+  text-align:left;
+}
+
+/* ---- intro header ---- */
+.home-intro{max-width:760px;}
+.home-eyebrow{
+  display:inline-block;
+  font-family:var(--v-mono); font-size:12px; line-height:16px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--v-body);
+  padding:5px 12px; margin-bottom:14px;
+  border:1px solid var(--v-hairline); border-radius:9999px;
+  background:var(--v-chip-bg, transparent);
+}
+.home-intro h2{
+  font-family:var(--v-sans);
+  font-size:clamp(24px,4vw,38px); line-height:1.1; font-weight:600;
+  letter-spacing:-.03em; color:var(--v-ink); margin:0 0 12px;
+}
+.home-intro p{
+  font-family:var(--v-sans);
+  font-size:clamp(15px,1.6vw,17px); line-height:1.7; color:var(--v-body); margin:0;
+}
+.home-intro b{color:var(--v-ink); font-weight:600;}
+
+/* ---- the two rule sets / "types" ---- */
+.home-modes{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:clamp(14px,2vw,22px);
+}
+.home-mode{
+  background:var(--v-canvas, #fff);
+  border:1px solid var(--v-hairline, #ebebeb);
+  border-radius:16px;
+  box-shadow:var(--v-elev-3, 0 2px 8px rgba(0,0,0,.05));
+  padding:clamp(20px,2.4vw,28px);
+  display:flex; flex-direction:column; gap:8px;
+}
+.home-mode-icon{
+  font-size:30px; line-height:1;
+  width:54px; height:54px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--v-canvas-soft, #f7f7f7);
+  border:1px solid var(--v-hairline, #ebebeb);
+  margin-bottom:4px;
+}
+.home-mode h3{
+  font-family:var(--v-sans);
+  font-size:clamp(18px,2.2vw,21px); letter-spacing:-.015em;
+  color:var(--v-ink); font-weight:600; margin:0;
+}
+.home-mode .home-mode-tag{
+  font-family:var(--v-mono); font-size:12px; letter-spacing:.03em;
+  text-transform:uppercase; color:var(--v-body); margin:0 0 4px;
+}
+.home-mode p{
+  font-family:var(--v-sans);
+  font-size:15px; line-height:1.65; color:var(--v-body); margin:0;
+}
+.home-mode b{color:var(--v-ink); font-weight:600;}
+
+/* ---- supporting prose (how to play, multiplayer, why play) ---- */
+.home-prose{
+  background:var(--v-canvas, #fff);
+  border:1px solid var(--v-hairline, #ebebeb);
+  border-radius:16px;
+  box-shadow:var(--v-elev-3, 0 2px 8px rgba(0,0,0,.05));
+  padding:clamp(24px,3vw,36px);
+  color:var(--v-body);
+  font-family:var(--v-sans);
+  line-height:1.7;
+}
+.home-prose h3{
+  font-size:clamp(16px,2.2vw,19px); letter-spacing:-.01em;
+  color:var(--v-ink); margin:24px 0 8px;
+}
+.home-prose h3:first-child{margin-top:0;}
+.home-prose p{margin:0 0 14px; font-size:15.5px;}
+.home-prose p:last-child{margin-bottom:0;}
+.home-prose b{color:var(--v-ink); font-weight:600;}
+
+/* ---- stack the two mode cards on narrow screens ---- */
+@media (max-width:720px){
+  #home-seo{text-align:left;}
+  .home-modes{grid-template-columns:1fr;}
+}
+
+/* =====================================================================
+   FAQ SECTION — #home-faq on the landing page.
+   Uses <details>/<summary> for native accordion + good semantics.
+===================================================================== */
+
+#home-faq{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto;
+  padding:clamp(20px,4vw,48px) 4px clamp(48px,7vw,80px);
+  display:flex;
+  flex-direction:column;
+  gap:clamp(22px,3vw,32px);
+}
+
+.faq-header{max-width:680px;}
+.faq-header h2{
+  font-family:var(--v-sans);
+  font-size:clamp(24px,4vw,38px); line-height:1.1; font-weight:600;
+  letter-spacing:-.03em; color:var(--v-ink); margin:0 0 10px;
+}
+.faq-header p{
+  font-family:var(--v-sans);
+  font-size:clamp(15px,1.6vw,17px); line-height:1.7; color:var(--v-body); margin:0;
+}
+
+/* ---- accordion list ---- */
+.faq-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.faq-item{
+  background:var(--v-canvas, #fff);
+  border:1px solid var(--v-hairline, #ebebeb);
+  border-radius:14px;
+  box-shadow:var(--v-elev-3, 0 2px 8px rgba(0,0,0,.05));
+  overflow:hidden;
+  transition:box-shadow .22s, border-color .22s;
+}
+.faq-item[open]{
+  box-shadow:0 6px 24px rgba(0,0,0,.1);
+  border-color:var(--accent, var(--v-hairline, #d0d0d0));
+}
+
+
+.faq-q{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  list-style:none;
+  cursor:pointer;
+  padding:clamp(16px,2vw,22px) clamp(18px,2.5vw,28px);
+  font-family:var(--v-sans);
+  font-size:clamp(15px,1.8vw,17px);
+  font-weight:600;
+  letter-spacing:-.01em;
+  color:var(--v-ink);
+  user-select:none;
+}
+.faq-q::-webkit-details-marker{display:none;}
+.faq-q::after{
+  content:"";
+  flex-shrink:0;
+  width:20px; height:20px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center;
+  transition:transform .25s;
+}
+.faq-item[open] .faq-q::after{transform:rotate(180deg);}
+
+.faq-a{
+  padding:0 clamp(18px,2.5vw,28px) clamp(16px,2vw,22px);
+  font-family:var(--v-sans);
+  font-size:15px;
+  line-height:1.7;
+  color:var(--v-body);
+}
+.faq-a p{margin:0 0 10px;}
+.faq-a p:last-child{margin-bottom:0;}
+.faq-a b{color:var(--v-ink); font-weight:600;}
+
+@media (max-width:720px){
+  .faq-q{font-size:15px;}
+}
