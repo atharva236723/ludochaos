@@ -10,7 +10,15 @@
 #game{display:none; width:100%; flex:1; flex-direction:column;
   align-items:center; justify-content:center; gap:16px;
   padding-top:calc(var(--cell)*1.6);}
-.game-wrap{display:flex; align-items:center; justify-content:center; gap:28px;}
+.game-wrap{display:flex; align-items:center; justify-content:center; gap:8px;}
+/* on very narrow screens where side panels are hidden, restore --cell to the
+   full 15-column width so the board doesn't shrink unnecessarily */
+@media(max-width:499px){
+  :root{
+    --cell: min(40px, (100vw - 36px)/15, (100vh  - var(--nav-h,58px) - 44px)/20);
+    --cell: min(40px, (100vw - 36px)/15, (100svh - var(--nav-h,58px) - 44px)/20);
+  }
+}
 /* wraps the board + the edge-mounted die; padding gives the die room to sit
    outside the board without being clipped or overlapping the panel */
 .boardZone{position:relative; padding:calc(var(--cell)*2.5) 0;}
@@ -66,37 +74,45 @@
   background:rgba(255,255,255,.85); box-shadow:inset 0 2px 5px rgba(0,0,0,.3);
 }
 
-/* ----- Player corner cards: avatar + name in the boardZone padding strips -----
-   Cards live in #playerLayer (a sibling of #board within .boardZone, same as
-   #diceLayer). They are positioned by JS (renderPlayerCorners) between the die
-   and the board edge — green/yellow above the board, blue/red below — so they
-   are always outside the playing field. z-index:4 keeps them above the die
-   arrow (z:7 is die itself so die still shows on top in the tight corner). */
-#playerLayer{position:absolute; inset:0; pointer-events:none; z-index:4;}
+/* ----- Player side columns: avatar + name flanking the board -----
+   Two flex columns (#playerSideLeft, #playerSideRight) sit as siblings of
+   .boardZone inside .game-wrap. Left holds green (top) + red (bottom);
+   right holds yellow (top) + blue (bottom). Height matches boardZone so
+   the top/bottom cards align with the corner dice. Hidden on narrow screens
+   where there is no room beside the board. */
+.player-side{
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:space-between;
+  height:calc(var(--cell)*20); /* matches boardZone: 15 board + 2×2.5 padding */
+  padding:calc(var(--cell)*0.55) calc(var(--cell)*.15);
+  width:calc(var(--cell)*2.2);
+  flex-shrink:0;
+}
+@media(max-width:499px){
+  .player-side{display:none;}
+}
 
 .player-corner-card{
-  position:absolute;
   display:flex; flex-direction:column; align-items:center;
-  gap:calc(var(--cell)*.05); pointer-events:none;
-  /* horizontal centering via transform set in JS */
+  gap:calc(var(--cell)*.1); pointer-events:none;
 }
 .pcc-avatar{
-  width:calc(var(--cell)*.72); height:calc(var(--cell)*.72);
+  width:calc(var(--cell)*1.4); height:calc(var(--cell)*1.4);
   border-radius:50%; flex-shrink:0;
   background:var(--pcc-col,#888);
   display:flex; align-items:center; justify-content:center; overflow:hidden;
-  border:calc(var(--cell)*.055) solid rgba(255,255,255,.65);
-  box-shadow:0 2px 8px rgba(0,0,0,.55);
-  font-size:calc(var(--cell)*.36); color:#fff; font-weight:700; line-height:1;
+  border:calc(var(--cell)*.07) solid rgba(255,255,255,.7);
+  box-shadow:0 3px 12px rgba(0,0,0,.6);
+  font-size:calc(var(--cell)*.6); color:#fff; font-weight:700; line-height:1;
 }
 .pcc-img{
   width:100%; height:100%; object-fit:cover; display:block; border-radius:50%;
 }
 .pcc-name{
-  font-size:max(calc(var(--cell)*.2), 8px); font-weight:700; color:#fff; line-height:1.2;
+  font-size:max(calc(var(--cell)*.24), 9px); font-weight:700; color:#fff; line-height:1.2;
   text-shadow:0 1px 4px rgba(0,0,0,.9),0 0 2px rgba(0,0,0,.7);
   text-align:center; white-space:nowrap;
-  max-width:calc(var(--cell)*2); overflow:hidden; text-overflow:ellipsis;
+  max-width:calc(var(--cell)*2.2); overflow:hidden; text-overflow:ellipsis;
 }
 
 /* the dice — one per house corner, parked on the board's outer edge by each

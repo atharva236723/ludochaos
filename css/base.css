@@ -29,8 +29,8 @@
      svh (small viewport height) is used so mobile browser chrome (the URL bar)
      can't push the board off-screen; the plain-vh line is the fallback for
      browsers without svh. This is what keeps the board whole in landscape. */
-  --cell: min(40px, (100vw - 36px)/15, (100vh  - var(--nav-h,58px) - 44px)/20);
-  --cell: min(40px, (100vw - 36px)/15, (100svh - var(--nav-h,58px) - 44px)/20);
+  --cell: min(40px, (100vw - 36px)/20, (100vh  - var(--nav-h,58px) - 44px)/20);
+  --cell: min(40px, (100vw - 36px)/20, (100svh - var(--nav-h,58px) - 44px)/20);
 
   /* ---- glassmorphism design tokens (dark theme) ---- */
   --glass:        rgba(255,255,255,.055);   /* frosted surface             */

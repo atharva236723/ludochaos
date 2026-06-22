@@ -110,8 +110,8 @@ const Online = (function () {
 
     const players = room.players || {};
     // Color order must match startGame()'s active array for each player count:
-    // 2p=green+blue, 3p=green+yellow+blue, 4p=green+yellow+blue+red
-    const COLOR_ORDER = { 2: ['green','blue'], 3: ['green','yellow','blue'], 4: ['green','yellow','blue','red'] };
+    // 2p=green+blue, 4p=green+yellow+blue+red
+    const COLOR_ORDER = { 2: ['green','blue'], 4: ['green','yellow','blue','red'] };
     const colors  = COLOR_ORDER[room.meta.maxPlayers] || COLOR_ORDER[4];
     const used    = Object.values(players).map(p => p.color);
     const assignedColor = colors.find(c => !used.includes(c));

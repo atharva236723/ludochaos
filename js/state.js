@@ -141,9 +141,6 @@ function startGame(){
     useTeamMode = true;
     teams = {A:['green','blue'], B:['yellow','red']};
     turnColors = active.slice();
-  } else if(numPlayers===3){
-    active = ['green','yellow','blue'];
-    turnColors = active.slice();
   } else if(numPlayers===2){
     active = ['green','blue'];
     turnColors = active.slice();

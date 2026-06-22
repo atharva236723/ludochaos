@@ -15,7 +15,7 @@ const Prefs = (function(){
     avatar:   '',              // emoji avatar; '' → fall back to name's initial
     tagline:  '',              // short motto shown under the name
     mode:     'classic',       // default rule set: 'classic' | 'chaos'
-    players:  4,               // default player count: 2 | 3 | 4
+    players:  4,               // default player count: 2 | 4
     dice:     1,               // default dice count: 1 (single) | 2 (double)
     vsAI:     true,            // default opponent: true = vs Computer
     sound:    true,            // master sound on/off

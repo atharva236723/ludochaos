@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -22,8 +22,12 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#0b0e16">
 <link rel="canonical" href="https://ludochaos.com/play.html">
-<!-- emoji favicon as an inline SVG data URI — avoids a 404 with no asset file -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B2%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Ludo Chaos" />
+<link rel="manifest" href="/site.webmanifest" />
 
 <!-- Open Graph (Facebook, WhatsApp, LinkedIn, Discord…) -->
 <meta property="og:type" content="website">
@@ -231,7 +235,6 @@
       <span class="cr-label">Max players</span>
       <div class="cr-seg" id="crMaxP">
         <button class="neon-btn"    data-val="2" onclick="setCROpt('maxPlayers',2)">2</button>
-        <button class="neon-btn"    data-val="3" onclick="setCROpt('maxPlayers',3)">3</button>
         <button class="neon-btn on" data-val="4" onclick="setCROpt('maxPlayers',4)">4</button>
       </div>
     </div>
@@ -452,6 +455,9 @@
   <button class="menuBtn neon-btn" onclick="confirmExit()" title="Exit to menu">Exit</button>
 
   <div class="game-wrap">
+    <!-- player identity cards for green (top-left) and red (bottom-left) -->
+    <div id="playerSideLeft" class="player-side"></div>
+
     <!-- boardZone holds the board plus the die, which sits OUTSIDE the board
          (on its edge) so it isn't clipped by the board's overflow -->
     <div class="boardZone">
@@ -464,11 +470,10 @@
            owner's last roll (as pips) until that player rolls again; only the
            current player's die is active and tappable. -->
       <div id="diceLayer"></div>
-      <!-- player identity cards (avatar + name) rendered by renderPlayerCorners()
-           in the top/bottom padding strips — outside the board playing area -->
-      <div id="playerLayer"></div>
     </div>
 
+    <!-- player identity cards for yellow (top-right) and blue (bottom-right) -->
+    <div id="playerSideRight" class="player-side"></div>
   </div>
 </div>
 

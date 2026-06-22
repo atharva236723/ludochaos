@@ -373,7 +373,7 @@
 ================================================================ */
 .online-turn-badge {
   position: fixed;
-  top: 70px;
+  top: calc(var(--nav-h, 58px) + 12px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
@@ -442,6 +442,14 @@
   min-width: 230px;
   box-shadow: 0 8px 32px rgba(0,0,0,.55);
   animation: ln-pop .22s cubic-bezier(.34,1.56,.64,1);
+}
+@media (max-width: 480px) {
+  #lobbyNotification {
+    bottom: 16px;
+    right: 12px;
+    left: 12px;
+    min-width: 0;
+  }
 }
 @keyframes ln-pop {
   from { opacity: 0; transform: translateY(12px) scale(.95); }
