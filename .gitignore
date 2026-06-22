@@ -1,0 +1,21 @@
+# Cloudflare Workers build artifacts
+.wrangler/
+
+# AI assistant configuration (not project source)
+.claude/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (if ever added)
+node_modules/
+package-lock.json
