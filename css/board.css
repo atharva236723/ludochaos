@@ -1,0 +1,271 @@
+/* =====================================================================
+   BOARD — the 15x15 grid, cell types (path/safe/chaos/center),
+   color squares, bases, and the moving tokens.
+===================================================================== */
+/* the game screen fills the remaining height so the board sits centered,
+   both vertically and horizontally, as the focus of the screen. A touch of
+   top padding biases the board downward so the edge-mounted dice (and their
+   roll animation, which overhangs the board's top edge) clear the fixed
+   navbar instead of tucking under it. */
+#game{display:none; width:100%; flex:1; flex-direction:column;
+  align-items:center; justify-content:center; gap:16px;
+  padding-top:calc(var(--cell)*1.6);}
+.game-wrap{display:flex; align-items:center; justify-content:center; gap:28px;}
+/* wraps the board + the edge-mounted die; padding gives the die room to sit
+   outside the board without being clipped or overlapping the panel */
+.boardZone{position:relative; padding:calc(var(--cell)*2.5) 0;}
+
+.board{
+  position:relative;
+  width:calc(var(--cell)*15); height:calc(var(--cell)*15);
+  display:grid; grid-template-columns:repeat(15,var(--cell));
+  grid-template-rows:repeat(15,var(--cell));
+  background:#0d1018; border-radius:10px; padding:0; overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.55);
+}
+.cell{border:.5px solid rgba(255,255,255,.05); position:relative;}
+/* black grid lines so each block of the path/home runs reads as a separate square */
+.cell.path,
+.cell.home-red,.cell.home-green,.cell.home-yellow,.cell.home-blue{
+  border:1px solid rgba(0,0,0,.55);
+}
+.cell.path{background:#f4f1e8;}
+.cell.dark{background:#10141d;}
+.cell.safe::after{content:"★"; position:absolute; inset:0; display:flex;
+  align-items:center; justify-content:center; color:rgba(0,0,0,.35); font-size:calc(var(--cell)*.6);}
+.cell.center{background:#0d1018;}
+
+.red{background:var(--red);} .green{background:var(--green);}
+.yellow{background:var(--yellow);} .blue{background:var(--blue);}
+.home-red{background:rgba(231,76,60,.55);} .home-green{background:rgba(46,204,113,.55);}
+.home-yellow{background:rgba(241,196,15,.55);} .home-blue{background:rgba(52,152,219,.55);}
+/* yards are left neutral — the pins are the only thing shown there */
+.base-red,.base-green,.base-yellow,.base-blue{background:transparent;}
+.start-red{background:var(--red)!important;} .start-green{background:var(--green)!important;}
+.start-yellow{background:var(--yellow)!important;} .start-blue{background:var(--blue)!important;}
+
+/* slot rings removed — pins rest directly on the board with no backing */
+.baseslot{display:none;}
+
+/* compact, color-matched "house" holding each player's four waiting pieces */
+.house{
+  position:absolute; z-index:1; border-radius:0;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+}
+.house-green {background:rgba(46,204,113,.55);
+  box-shadow:0 6px 18px rgba(0,0,0,.4), inset 0 0 0 calc(var(--cell)*.26) var(--green);}
+.house-yellow{background:rgba(241,196,15,.55);
+  box-shadow:0 6px 18px rgba(0,0,0,.4), inset 0 0 0 calc(var(--cell)*.26) var(--yellow);}
+.house-blue  {background:rgba(52,152,219,.55);
+  box-shadow:0 6px 18px rgba(0,0,0,.4), inset 0 0 0 calc(var(--cell)*.26) var(--blue);}
+.house-red   {background:rgba(231,76,60,.55);
+  box-shadow:0 6px 18px rgba(0,0,0,.4), inset 0 0 0 calc(var(--cell)*.26) var(--red);}
+.house .hslot{
+  position:absolute; width:calc(var(--cell)*.9); height:calc(var(--cell)*.9);
+  transform:translate(-50%,-50%); border-radius:50%;
+  background:rgba(255,255,255,.85); box-shadow:inset 0 2px 5px rgba(0,0,0,.3);
+}
+
+/* ----- Player corner cards: avatar + name in the boardZone padding strips -----
+   Cards live in #playerLayer (a sibling of #board within .boardZone, same as
+   #diceLayer). They are positioned by JS (renderPlayerCorners) between the die
+   and the board edge — green/yellow above the board, blue/red below — so they
+   are always outside the playing field. z-index:4 keeps them above the die
+   arrow (z:7 is die itself so die still shows on top in the tight corner). */
+#playerLayer{position:absolute; inset:0; pointer-events:none; z-index:4;}
+
+.player-corner-card{
+  position:absolute;
+  display:flex; flex-direction:column; align-items:center;
+  gap:calc(var(--cell)*.05); pointer-events:none;
+  /* horizontal centering via transform set in JS */
+}
+.pcc-avatar{
+  width:calc(var(--cell)*.72); height:calc(var(--cell)*.72);
+  border-radius:50%; flex-shrink:0;
+  background:var(--pcc-col,#888);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  border:calc(var(--cell)*.055) solid rgba(255,255,255,.65);
+  box-shadow:0 2px 8px rgba(0,0,0,.55);
+  font-size:calc(var(--cell)*.36); color:#fff; font-weight:700; line-height:1;
+}
+.pcc-img{
+  width:100%; height:100%; object-fit:cover; display:block; border-radius:50%;
+}
+.pcc-name{
+  font-size:max(calc(var(--cell)*.2), 8px); font-weight:700; color:#fff; line-height:1.2;
+  text-shadow:0 1px 4px rgba(0,0,0,.9),0 0 2px rgba(0,0,0,.7);
+  text-align:center; white-space:nowrap;
+  max-width:calc(var(--cell)*2); overflow:hidden; text-overflow:ellipsis;
+}
+
+/* the dice — one per house corner, parked on the board's outer edge by each
+   player. They live OUTSIDE .board (in #diceLayer within .boardZone) so the
+   board's overflow:hidden never clips them. Each keeps showing its owner's last
+   roll; only the current player's die is .active (lit) and tappable. */
+.die{
+  position:absolute; z-index:6; cursor:default;
+  width:calc(var(--cell)*2); height:calc(var(--cell)*2);
+  transform:translate(-50%,-50%);
+  border-radius:16px; background:#fbfbfb;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 14px rgba(0,0,0,.45);
+  opacity:.4; filter:grayscale(.3);    /* idle dice fade back, waiting their turn */
+  transition:opacity .3s, filter .3s, transform .2s;
+}
+/* the die for whoever's turn it is, lit up */
+.die.active{opacity:1; filter:none;}
+/* double-dice games park two smaller dice side by side at each corner */
+.die.dual{width:calc(var(--cell)*1.55); height:calc(var(--cell)*1.55); border-radius:12px;}
+/* spend phase (double dice): a usable die invites a tap, the chosen one is ringed,
+   a spent one fades out */
+.die.choose{cursor:pointer; animation:diePulse 1s ease-in-out infinite;}
+.die.sel{opacity:1; filter:none; transform:translate(-50%,-50%) scale(1.08);}
+.die.spent{opacity:.28; filter:grayscale(1); cursor:default;}
+@keyframes diePulse{
+  0%,100%{box-shadow:0 6px 14px rgba(0,0,0,.45), 0 0 0 3px #fff, 0 0 10px 2px rgba(255,255,255,.5);}
+  50%    {box-shadow:0 6px 14px rgba(0,0,0,.45), 0 0 0 3px #fff, 0 0 18px 6px rgba(255,255,255,.95);}
+}
+/* a real die face: nine pip slots in a 3x3 grid, the lit ones shown as dots */
+.dieFace{
+  width:78%; height:78%;
+  display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+}
+.pip{ place-self:center; width:34%; height:34%; border-radius:50%; }
+.pip.on{
+  width:38%; height:38%;
+  background:radial-gradient(circle at 35% 30%, #333, #000 70%);
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.3), 0 1px 2px rgba(0,0,0,.5);
+}
+/* when it's a human's turn to roll, the active die invites a tap (the bobbing
+   arrow already signals whose turn it is, so the die itself stays still) */
+.die.active.ready{cursor:pointer;}
+/* a coloured ring marks whose die it is right now */
+.die.green {box-shadow:0 6px 14px rgba(0,0,0,.45), 0 0 0 3px var(--green);}
+.die.yellow{box-shadow:0 6px 14px rgba(0,0,0,.45), 0 0 0 3px var(--yellow);}
+.die.blue  {box-shadow:0 6px 14px rgba(0,0,0,.45), 0 0 0 3px var(--blue);}
+.die.red   {box-shadow:0 6px 14px rgba(0,0,0,.45), 0 0 0 3px var(--red);}
+/* shake keeps the translate(-50%,-50%) centering while it spins (~0.7s roll) */
+.die.rolling{opacity:1; filter:none; animation:shake .7s;}
+@keyframes shake{
+  0%,100%{transform:translate(-50%,-50%) rotate(0);}
+  25%{transform:translate(-50%,-50%) rotate(-18deg) scale(1.05);}
+  75%{transform:translate(-50%,-50%) rotate(18deg) scale(1.05);}
+}
+
+/* whose-turn cue — a colored arrow that sits just inside the board edge by
+   the current player and bobs toward their die. Hidden unless it's a human's
+   turn to roll; positioned/colored by positionDieArrow() in render.js. */
+.dieArrow{
+  position:absolute; z-index:7; display:none;  /* above .die (z-index:6) so the box never overlaps it */
+  transform:translate(-50%,-50%);
+  font-size:calc(var(--cell)*1.3); line-height:1; font-weight:900;
+  pointer-events:none;
+  /* a plain white arrow — just a soft drop shadow so it reads on any backdrop */
+  color:#fff;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
+  transition:left .4s cubic-bezier(.34,1.56,.64,1),
+             top  .4s cubic-bezier(.34,1.56,.64,1);
+}
+.dieArrow.show{display:block;}
+.dieArrow.show.left {animation:arrowLeft  1s ease-in-out infinite;}
+.dieArrow.show.right{animation:arrowRight 1s ease-in-out infinite;}
+@keyframes arrowLeft {0%,100%{transform:translate(-50%,-50%);} 50%{transform:translate(-78%,-50%);}}
+@keyframes arrowRight{0%,100%{transform:translate(-50%,-50%);} 50%{transform:translate(-22%,-50%);}}
+
+/* center triangles */
+.center-tri{position:absolute; width:0; height:0;}
+
+/* tokens — each player's piece is a colored location-pin */
+.tokenLayer{position:absolute; inset:0; pointer-events:none;}
+.token{
+  position:absolute; width:calc(var(--cell)*1.12); height:calc(var(--cell)*1.44);
+  /* transparent — only the pin SVG should show, never a colored square behind it
+     (the bare .red/.green/etc colour rules above otherwise leak in via the
+     per-player class on the token) */
+  background:transparent;
+  /* anchor the pin's TIP at the cell centre */
+  transform:translate(-50%,-78%);
+  transition:left .28s cubic-bezier(.34,1.56,.64,1), top .28s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:auto; cursor:default; z-index:5;
+}
+/* finished tokens live inside the center triangle: small and center-anchored */
+.token.in-house{
+  transform:translate(-50%,-50%) scale(0.55);
+}
+.token.in-house .badge{display:none;}
+
+/* per-player pin colour (body + a brighter highlight) */
+.token.red   {--pin:var(--red);    --pin-hi:#ff8a7c;}
+.token.green {--pin:var(--green);  --pin-hi:#6ff0a3;}
+.token.yellow{--pin:var(--yellow); --pin-hi:#ffe680;}
+.token.blue  {--pin:var(--blue);   --pin-hi:#7ec6ff;}
+
+.pin{
+  width:100%; height:100%; display:block;
+  transform-origin:50% 100%;
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.45));
+}
+.pin .pin-body{stroke:rgba(0,0,0,.45); stroke-width:1;}
+.pin .pin-hole{fill:#fbfdff;}
+
+/* number/✓ badge that sits inside the pin's white hole */
+.badge{
+  position:absolute; left:50%; top:32%; transform:translate(-50%,-50%);
+  font-size:calc(var(--cell)*.34); font-weight:800; color:#222;
+  pointer-events:none; line-height:1;
+}
+
+/* a forward walk GLIDES smoothly between blocks (no snap, no hop) so the piece
+   slides cleanly from cell to cell. The glide duration matches the animator's
+   per-block delay. */
+.token.walking{
+  z-index:20;
+  transition:left .3s cubic-bezier(.45,.05,.55,.95),
+             top  .3s cubic-bezier(.45,.05,.55,.95);
+}
+/* the captured-token death walk glides home; homeward() sets the per-cell glide
+   inline (this base only raises it and zeroes the snap before the walk starts) */
+.token.stepping{transition:none; z-index:20;}
+
+/* bringing a piece out of the yard: an eased glide + a springy pop-in */
+.token.popping{transition:left .34s cubic-bezier(.34,1.56,.64,1),
+                         top  .34s cubic-bezier(.34,1.56,.64,1);}
+.token.popping .pin{animation:popin .34s ease;}
+@keyframes popin{0%{transform:scale(.2);} 60%{transform:scale(1.18);} 100%{transform:scale(1);}}
+
+/* a captured piece walking back home reads as slightly faded */
+.token.dying .pin{filter:drop-shadow(0 3px 3px rgba(0,0,0,.4)) saturate(.7) opacity(.85);}
+
+/* the piece(s) you can move glow, with a black cog that turns at the pin's base */
+.token.movable{cursor:pointer; z-index:9;}
+.token.movable .pin{
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.45)) drop-shadow(0 0 5px rgba(255,255,255,.9));}
+/* a toothed, HOLLOW gear (a ring you can see through) centred on the pin's TIP,
+   which is the cell centre — exactly where the white home slot (.hslot) sits for
+   a piece in its yard. So the ring SURROUNDS the white circle instead of sitting
+   off-centre over it. Its inner hole is sized to match the .hslot (dia .9*cell):
+   the hole is 60 of the 100-unit SVG viewBox, so width = hole / .6. The token is
+   anchored translate(-50%,-78%), so the cell centre is at (50%, 78%) of the token. */
+.token.movable::after{
+  --gear-hole: calc(var(--cell)*.9);          /* == .hslot diameter */
+  --gear-size: calc(var(--gear-hole)/.6);     /* hole is 60% of the gear box */
+  content:""; position:absolute; left:50%; top:78%; z-index:-1;
+  width:var(--gear-size); height:var(--gear-size);
+  pointer-events:none;
+  background:center/contain no-repeat
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'><g fill='%23111'><rect x='-8' y='-50' width='16' height='18' rx='2'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(45)'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(90)'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(135)'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(180)'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(225)'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(270)'/><rect x='-8' y='-50' width='16' height='18' rx='2' transform='rotate(315)'/></g><path fill='%23111' fill-rule='evenodd' d='M -42 0 a 42 42 0 1 0 84 0 a 42 42 0 1 0 -84 0 M -30 0 a 30 30 0 1 0 60 0 a 30 30 0 1 0 -60 0'/><circle r='30' fill='none' stroke='%23555' stroke-width='2'/></svg>");
+  animation:spin-base 2.4s linear infinite;
+}
+/* on the playground there's no yard slot to ring, so the gear shrinks to hug
+   the pin tip rather than the (absent) white home circle */
+.token.movable.onboard::after{
+  --gear-hole: calc(var(--cell)*.52);
+}
+/* "Highlight my legal moves" turned off: still clickable, but drop the glow and
+   the spinning gear so the board stays quiet (see render.js showHint). */
+.token.movable.nohl .pin{filter:drop-shadow(0 3px 3px rgba(0,0,0,.45));}
+.token.movable.nohl::after{display:none;}
+@keyframes spin-base{
+  from{transform:translate(-50%,-50%) rotate(0);}
+  to  {transform:translate(-50%,-50%) rotate(360deg);}}
