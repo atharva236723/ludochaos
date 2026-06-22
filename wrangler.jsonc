@@ -1,8 +1,13 @@
 {
   "name": "ludo-chaos",
   "compatibility_date": "2025-01-01",
+  "main": "worker.js",
+  "routes": [
+    { "pattern": "ludochaos.com/*", "zone_name": "ludochaos.com" }
+  ],
   "assets": {
     "directory": ".",
+    "binding": "ASSETS",
     "not_found_handling": "404-page"
   }
 }

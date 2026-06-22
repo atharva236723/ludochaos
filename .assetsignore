@@ -5,3 +5,4 @@ DESIGN.md
 wrangler.jsonc
 .assetsignore
 download-logo.html
+worker.js
