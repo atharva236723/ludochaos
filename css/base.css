@@ -1,0 +1,305 @@
+/* =====================================================================
+   BASE — theme variables, global reset, page background, title.
+   Edit colors and the global cell size here.
+
+   The whole site now speaks the Vercel design language (see DESIGN.md):
+   a near-white canvas, ink-black Inter type with negative tracking,
+   JetBrains Mono eyebrows, hairline-bordered white cards with stacked
+   shadows, black pill CTAs, and the multi-stop mesh gradient as the only
+   decoration. The --v-* tokens below are the single source for that look;
+   every stylesheet pulls from them. The two Ludo boards (the floating
+   landing board and the in-game board) keep their own functional colours.
+===================================================================== */
+/* Inter (geometric sans) + JetBrains Mono (technical labels) for every page.
+   @import sits first so it covers the content/error pages too, not just the
+   game, which loads the same faces via <link>. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{
+  --red:#e74c3c; --green:#2ecc71; --yellow:#f1c40f; --blue:#3498db;
+  --red-d:#c0392b; --green-d:#27ae60; --yellow-d:#d4ac0d; --blue-d:#2980b9;
+  --bg1:#0b0e16; --bg2:#1b2030; --panel:#222838; --line:#2f3750; --text:#e8ecf5;
+  /* Board cell size — as large as possible while the whole board, the dice that
+     stick out past its edges, and the fixed navbar ALL fit on screen. Bounded by
+     three things and we take the smallest:
+       • 40px               — desktop cap
+       • (100vw-36px)/15    — width: 15 cells across + body padding
+       • (100svh-nav-44)/18 — height: ~18 cells (15 board + the board-zone
+                              padding the edge dice sit in) minus the navbar
+     svh (small viewport height) is used so mobile browser chrome (the URL bar)
+     can't push the board off-screen; the plain-vh line is the fallback for
+     browsers without svh. This is what keeps the board whole in landscape. */
+  --cell: min(40px, (100vw - 36px)/15, (100vh  - var(--nav-h,58px) - 44px)/20);
+  --cell: min(40px, (100vw - 36px)/15, (100svh - var(--nav-h,58px) - 44px)/20);
+
+  /* ---- glassmorphism design tokens (dark theme) ---- */
+  --glass:        rgba(255,255,255,.055);   /* frosted surface             */
+  --glass-strong: rgba(255,255,255,.09);    /* raised / hovered surface    */
+  --glass-brd:    rgba(255,255,255,.13);    /* hairline edge               */
+  --glass-blur:   blur(18px) saturate(1.5); /* the frost                   */
+  --radius:       20px;
+  --shadow:       0 24px 60px rgba(0,0,0,.5);
+  --accent:       linear-gradient(95deg,var(--green),#1fd1a5 45%,var(--blue));
+
+  /* ---- neon button system (blue → purple) ----
+     A single look shared by every clickable button in the app: a translucent
+     frosted surface tinted blue/purple, a glowing gradient edge, a sheen that
+     sweeps across on hover, and a soft idle glow pulse. Tune it all here. */
+  --neon-blue:#4d8bff; --neon-indigo:#7c5cff; --neon-purple:#b15cff; --neon-cyan:#36e6ff;
+  --neon-grad:  linear-gradient(120deg,#4d8bff 0%,#7c5cff 50%,#b15cff 100%);
+  --neon-grad2: linear-gradient(120deg,#36e6ff 0%,#6a8bff 45%,#c46bff 100%);
+  --neon-surface: linear-gradient(135deg, rgba(77,139,255,.16), rgba(177,92,255,.16));
+  --neon-edge:  rgba(150,160,255,.5);
+  --neon-glow:  0 0 18px rgba(110,90,255,.45);
+  --neon-glow-strong: 0 0 32px rgba(120,110,255,.7), 0 0 64px rgba(150,90,255,.35);
+
+  /* ---- VERCEL DESIGN TOKENS (global) ----
+     Ink/gray scale, near-white surfaces, the signature mesh-gradient stops,
+     and the subtle stacked-shadow elevation ladder. These drive the whole
+     site chrome; start-screen.css re-declares the same values scoped to the
+     menu (kept for safety, identical look). */
+  --v-ink:#171717; --v-body:#4d4d4d; --v-mute:#888;
+  --v-hairline:#ebebeb; --v-hairline-strong:#a1a1a1;
+  --v-canvas:#fff; --v-canvas-soft:#fafafa; --v-canvas-soft-2:#f5f5f5;
+  --v-link:#0070f3; --v-link-deep:#0761d1;
+  --v-error:#ee0000; --v-error-soft:#f7d4d6; --v-error-deep:#c50000;
+  --v-sans:'Inter', system-ui, -apple-system, sans-serif;
+  --v-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* the signature mesh-gradient stops (cyan / blue / violet / pink / amber) */
+  --v-g-blue:#007cf0; --v-g-teal:#00dfd8; --v-g-violet:#7928ca;
+  --v-g-pink:#ff0080; --v-g-coral:#ff4d4d; --v-g-amber:#f9cb28;
+  /* stacked-shadow elevation ladder (DESIGN.md Levels 2–5) */
+  --v-elev-2:0 1px 1px rgba(0,0,0,.02), 0 2px 2px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.06);
+  --v-elev-3:0 2px 2px rgba(0,0,0,.04), 0 8px 8px -8px rgba(0,0,0,.06), inset 0 0 0 1px rgba(0,0,0,.06);
+  --v-elev-4:0 2px 2px rgba(0,0,0,.04), 0 8px 16px -4px rgba(0,0,0,.06), inset 0 0 0 1px rgba(0,0,0,.06);
+  --v-elev-5:0 1px 1px rgba(0,0,0,.02), 0 8px 16px -4px rgba(0,0,0,.06), 0 24px 32px -8px rgba(0,0,0,.06), inset 0 0 0 1px rgba(0,0,0,.06);
+  /* the full hero mesh wash, reused by landing + error hero accents */
+  --v-mesh:
+    radial-gradient(42% 70% at 12% 30%, color-mix(in srgb, var(--v-g-blue) 32%, transparent), transparent 70%),
+    radial-gradient(40% 70% at 42% 0%,  color-mix(in srgb, var(--v-g-violet) 30%, transparent), transparent 70%),
+    radial-gradient(44% 75% at 72% 22%, color-mix(in srgb, var(--v-g-pink) 26%, transparent), transparent 70%),
+    radial-gradient(46% 80% at 92% 55%, color-mix(in srgb, var(--v-g-amber) 24%, transparent), transparent 72%);
+
+  /* ---- semantic chrome tokens (split out of --v-ink for theming) ----
+     The design uses --v-ink as BOTH the text colour and the black-pill button
+     fill. Those two roles must diverge under a dark palette (light text, but a
+     light pill), so the primary button, the navbar surface, and the small
+     frosted chips read from their own tokens. The [data-theme] blocks below
+     swap these; the bright defaults reproduce the original look exactly. */
+  --v-btn-bg:var(--v-ink); --v-btn-bg-hover:#000; --v-btn-fg:#fff;
+  --v-nav-bg:rgba(255,255,255,.8); --v-nav-border:var(--v-hairline);
+  --v-chip-bg:rgba(255,255,255,.7);
+}
+
+/* =====================================================================
+   COLOR THEMES — full-palette swaps applied via <html data-theme="…">.
+   js/theme.js sets the attribute from the saved profile preference
+   (prefs.js, key 'theme'); the navbar theme picker (js/nav.js) writes it.
+   'bright' is the default declared in :root above, so it needs no block.
+
+   Each block re-points the --v-* palette tokens. The dark families also
+   re-point the elevation ladder to a light hairline inset + soft shadow
+   (the default black insets vanish on a dark surface) and flip the primary
+   button to a light pill (--v-btn-*). Add a theme by adding one block here
+   and one <button> in the navbar picker.
+===================================================================== */
+/* shared dark-surface elevation + chrome, for the three dark themes */
+:root[data-theme="dark"], :root[data-theme="midnight"], :root[data-theme="forest"]{
+  --v-elev-2:0 1px 2px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.06);
+  --v-elev-3:0 2px 10px rgba(0,0,0,.42), inset 0 0 0 1px rgba(255,255,255,.07);
+  --v-elev-4:0 6px 20px rgba(0,0,0,.48), inset 0 0 0 1px rgba(255,255,255,.08);
+  --v-elev-5:0 14px 38px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.08);
+  --v-chip-bg:rgba(255,255,255,.06);
+  /* primary pill inverts to a light chip with dark text (its theme's canvas) */
+  --v-btn-bg:#eef1f6; --v-btn-bg-hover:#fff; --v-btn-fg:var(--v-canvas-soft);
+}
+:root[data-theme="dark"]{
+  --v-ink:#f3f4f7; --v-body:#b3b8c4; --v-mute:#7e8595;
+  --v-hairline:#2c313c; --v-hairline-strong:#454c5b;
+  --v-canvas:#1c1f27; --v-canvas-soft:#15171c; --v-canvas-soft-2:#22262f;
+  --v-link:#5b9dff; --v-link-deep:#3b82f6;
+  --v-nav-bg:rgba(21,23,28,.8); --v-nav-border:#2c313c;
+}
+:root[data-theme="midnight"]{
+  --v-ink:#eaf0ff; --v-body:#a9b6d6; --v-mute:#6f7fa6;
+  --v-hairline:#1e2c52; --v-hairline-strong:#33457a;
+  --v-canvas:#101a33; --v-canvas-soft:#0a1226; --v-canvas-soft-2:#16224a;
+  --v-link:#7aa2ff; --v-link-deep:#5b86f5;
+  --v-nav-bg:rgba(10,18,38,.82); --v-nav-border:#1e2c52;
+}
+:root[data-theme="forest"]{
+  --v-ink:#e8f5ec; --v-body:#a6c4b2; --v-mute:#6f8c7c;
+  --v-hairline:#214232; --v-hairline-strong:#356b50;
+  --v-canvas:#13251c; --v-canvas-soft:#0d1b14; --v-canvas-soft-2:#1b3326;
+  --v-link:#5fd39a; --v-link-deep:#34b377;
+  --v-nav-bg:rgba(13,27,20,.82); --v-nav-border:#214232;
+}
+/* Sepia is a warm LIGHT theme, so it keeps the default (dark-pill) button +
+   elevation and only re-tints the paper palette. */
+:root[data-theme="sepia"]{
+  --v-ink:#3a2f1e; --v-body:#6b5b41; --v-mute:#9a8763;
+  --v-hairline:#e3d4b3; --v-hairline-strong:#c9b389;
+  --v-canvas:#fbf4e6; --v-canvas-soft:#f5ead3; --v-canvas-soft-2:#efe1c6;
+  --v-link:#b5651d; --v-link-deep:#974f12;
+  --v-nav-bg:rgba(251,244,230,.82); --v-nav-border:#e3d4b3;
+  --v-chip-bg:rgba(255,255,255,.5);
+  --v-btn-bg:#3a2f1e; --v-btn-bg-hover:#2a2113; --v-btn-fg:#fbf4e6;
+}
+
+/* ---- ACCENT THEMES ----
+   The whole neon button/edge/glow system is re-tinted by swapping these few
+   variables. js/theme.js sets <html data-accent="…"> from the saved profile
+   preference (prefs.js); 'violet' is the default defined above, so it needs no
+   override here. Add a colour by adding one block + an option on the profile. */
+:root[data-accent="cyan"]{
+  --neon-grad:  linear-gradient(120deg,#22d3ee 0%,#38bdf8 50%,#6366f1 100%);
+  --neon-grad2: linear-gradient(120deg,#67e8f9 0%,#38bdf8 45%,#818cf8 100%);
+  --neon-surface: linear-gradient(135deg, rgba(34,211,238,.16), rgba(99,102,241,.16));
+  --neon-edge:  rgba(120,220,255,.55);
+  --neon-glow:  0 0 18px rgba(34,211,238,.45);
+  --neon-glow-strong: 0 0 32px rgba(56,189,248,.7), 0 0 64px rgba(34,211,238,.35);
+  --accent: linear-gradient(95deg,#22d3ee,#38bdf8 45%,#6366f1);
+}
+:root[data-accent="emerald"]{
+  --neon-grad:  linear-gradient(120deg,#34d399 0%,#10b981 50%,#22d3ee 100%);
+  --neon-grad2: linear-gradient(120deg,#6ee7b7 0%,#34d399 45%,#67e8f9 100%);
+  --neon-surface: linear-gradient(135deg, rgba(52,211,153,.16), rgba(34,211,238,.16));
+  --neon-edge:  rgba(120,255,200,.55);
+  --neon-glow:  0 0 18px rgba(16,185,129,.45);
+  --neon-glow-strong: 0 0 32px rgba(52,211,153,.7), 0 0 64px rgba(16,185,129,.35);
+  --accent: linear-gradient(95deg,#34d399,#10b981 45%,#22d3ee);
+}
+:root[data-accent="sunset"]{
+  --neon-grad:  linear-gradient(120deg,#fb923c 0%,#f43f5e 50%,#e11d48 100%);
+  --neon-grad2: linear-gradient(120deg,#fdba74 0%,#fb7185 45%,#f43f5e 100%);
+  --neon-surface: linear-gradient(135deg, rgba(251,146,60,.16), rgba(244,63,94,.16));
+  --neon-edge:  rgba(255,180,140,.6);
+  --neon-glow:  0 0 18px rgba(244,63,94,.45);
+  --neon-glow-strong: 0 0 32px rgba(251,113,133,.7), 0 0 64px rgba(244,63,94,.35);
+  --accent: linear-gradient(95deg,#fb923c,#f43f5e 45%,#e11d48);
+}
+:root[data-accent="rose"]{
+  --neon-grad:  linear-gradient(120deg,#f472b6 0%,#d946ef 50%,#a855f7 100%);
+  --neon-grad2: linear-gradient(120deg,#f9a8d4 0%,#e879f9 45%,#c084fc 100%);
+  --neon-surface: linear-gradient(135deg, rgba(244,114,182,.16), rgba(168,85,247,.16));
+  --neon-edge:  rgba(255,170,225,.6);
+  --neon-glow:  0 0 18px rgba(217,70,239,.45);
+  --neon-glow-strong: 0 0 32px rgba(232,121,249,.7), 0 0 64px rgba(217,70,239,.35);
+  --accent: linear-gradient(95deg,#f472b6,#d946ef 45%,#a855f7);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:var(--v-sans);
+  background:var(--v-canvas-soft);
+  color:var(--v-ink); min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; padding:18px;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+::selection{background:var(--v-ink); color:var(--v-canvas);}
+
+/* The old dark ambient orbs are retired site-wide — the Vercel surface is a
+   stark near-white canvas where whitespace and the hero mesh do the work.
+   Kept as no-ops so any stray reference degrades silently. */
+body::before, body::after{content:none; display:none;}
+
+/* ---- a reusable frosted-glass surface ---- */
+.glass{
+  background:var(--glass);
+  border:1px solid var(--glass-brd);
+  backdrop-filter:var(--glass-blur); -webkit-backdrop-filter:var(--glass-blur);
+  box-shadow:var(--shadow);
+}
+
+/* =====================================================================
+   NEON BUTTON — the shared look for clickable buttons across the app.
+   Translucent blue/purple glass, a glowing gradient edge, a travelling
+   sheen on hover, a gentle lift, and a slow idle glow pulse. Apply the
+   `.neon-btn` class (button families layer their own size/shape on top).
+===================================================================== */
+.neon-btn{
+  position:relative;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  cursor:pointer; border:1px solid var(--v-hairline); border-radius:9999px;
+  padding:10px 20px; font-family:var(--v-sans); font-weight:500; font-size:14px;
+  line-height:20px; letter-spacing:0; text-shadow:none;
+  color:var(--v-ink); background:var(--v-canvas);
+  box-shadow:var(--v-elev-2);
+  transition:transform .15s ease, box-shadow .2s ease, border-color .15s ease,
+             background .15s ease, color .15s ease;
+}
+.neon-btn:hover{
+  transform:translateY(-1px); color:var(--v-ink);
+  border-color:var(--v-hairline-strong); background:var(--v-canvas-soft-2);
+  box-shadow:var(--v-elev-3);
+}
+.neon-btn:active{transform:translateY(0);}
+.neon-btn:focus-visible{outline:none; box-shadow:0 0 0 3px rgba(0,124,240,.35);}
+.neon-btn:disabled{opacity:.5; cursor:default; transform:none;}
+
+/* the lit/selected state polarity-flips to ink (DESIGN.md featured cue) */
+.neon-btn.on,.neon-btn.is-on{
+  color:var(--v-btn-fg); background:var(--v-btn-bg); border-color:var(--v-btn-bg);
+  box-shadow:var(--v-elev-2);
+}
+.neon-btn.on:hover,.neon-btn.is-on:hover{background:var(--v-btn-bg-hover); color:var(--v-btn-fg);}
+
+/* the ink primary CTA (Start Game, Play Again) — the black 100px pill */
+.neon-btn.primary{
+  color:var(--v-btn-fg); background:var(--v-btn-bg); border-color:var(--v-btn-bg);
+  font-size:16px; line-height:24px; padding:0 24px; height:48px;
+}
+.neon-btn.primary:hover{background:var(--v-btn-bg-hover); color:var(--v-btn-fg); box-shadow:0 6px 20px rgba(0,0,0,.18);}
+
+/* muted ghost button for cancel / destructive secondary actions */
+.neon-btn.secondary{
+  color:var(--v-body); background:transparent; border-color:var(--v-hairline);
+}
+.neon-btn.secondary:hover{color:var(--v-ink); border-color:var(--v-hairline-strong); background:var(--v-canvas-soft-2);}
+
+@media(prefers-reduced-motion:reduce){
+  .neon-btn{transition:none;}
+}
+
+/* =====================================================================
+   CROSS-PAGE TRANSITIONS (View Transitions API + progress bar)
+   Chromium/Safari 18+: @view-transition handles the content swap with
+   the animations below. All browsers: js/transition.js drives a thin
+   neon progress bar across the top and fades in the page on entry.
+===================================================================== */
+
+/* progress bar — scales left-to-right during navigation via scaleX (GPU path) */
+#page-progress{
+  position:fixed; top:0; left:0; right:0; z-index:9999;
+  height:3px; pointer-events:none;
+  background:var(--neon-grad);
+  box-shadow:0 0 10px rgba(77,139,255,.65);
+  transform:scaleX(0); transform-origin:left;
+  opacity:0;
+  transition:transform 6s cubic-bezier(.05,.85,.1,1), opacity .25s ease;
+}
+#page-progress.running{ opacity:1; transform:scaleX(.82); }
+#page-progress.done   { opacity:0; transform:scaleX(1);
+  transition:transform .18s ease, opacity .4s ease .08s; }
+
+/* fade-in for browsers without cross-document View Transitions */
+body.page-in{ animation:pageIn .4s ease both; }
+@keyframes pageIn{ from{ opacity:0; } }
+
+@view-transition{ navigation:auto; }
+::view-transition-old(root){ animation:vt-out .28s cubic-bezier(.4,0,1,1) both; }
+::view-transition-new(root){ animation:vt-in  .5s  cubic-bezier(0,0,.2,1)  both; }
+@keyframes vt-out{ to  { opacity:0; transform:translateY(-12px) scale(.98); filter:blur(4px); } }
+@keyframes vt-in { from{ opacity:0; transform:translateY(18px)  scale(.98); filter:blur(4px); } }
+/* the navbar stays put rather than cross-fading with the page content */
+#navbar{ view-transition-name:navbar; }
+@media(prefers-reduced-motion:reduce){
+  ::view-transition-old(root),::view-transition-new(root){ animation:none; }
+  body.page-in, body::before, body::after{ animation:none; }
+}
+h1{font-size:clamp(26px,5vw,44px); letter-spacing:-.03em; margin-bottom:4px;
+   color:var(--v-ink); font-weight:600; font-family:var(--v-sans);}
+.sub{color:var(--v-body); margin-bottom:22px; font-size:15px;}
+/* in-game the big hero title/subtitle give way to the compact top-left brand,
+   leaving the board as the centered focus of the screen */
+body.in-game > h1, body.in-game > .sub{display:none;}

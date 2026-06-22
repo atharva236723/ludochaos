@@ -1,0 +1,51 @@
+/* =====================================================================
+   SEO CONTENT — the ~600-word "About Ludo Chaos" copy block on index.html.
+
+   Purely an on-page SEO surface: indexable, keyword-rich prose for crawlers
+   that also reads as a genuine intro for first-time visitors. Styled in the
+   same Vercel design language as the menu (start-screen.css tokens) and
+   scoped to the MENU state only — `body:has(#start):not(.show-landing):not(.in-game)`
+   — so it never appears over the dark landing intro or the in-game board.
+===================================================================== */
+
+/* hidden by default; the menu state reveals it (mirrors start-screen scoping) */
+#seo{display:none;}
+
+body:has(#start):not(.show-landing):not(.in-game) #seo{
+  display:block;
+  width:100%;
+  max-width:960px;
+  margin:8px auto 40px;
+  padding:0 4px;
+}
+
+.seo-card{
+  background:var(--v-canvas, #fff);
+  border:1px solid var(--v-hairline, #ebebeb);
+  border-radius:16px;
+  box-shadow:var(--v-elev-3, 0 2px 8px rgba(0,0,0,.05));
+  padding:34px 32px;
+  color:var(--v-body, #4d4d4d);
+  font-family:var(--v-sans, 'Inter', system-ui, sans-serif);
+  line-height:1.7;
+}
+
+.seo-card h2{
+  font-size:clamp(20px, 3vw, 27px);
+  letter-spacing:-.02em;
+  color:var(--v-ink, #171717);
+  margin:0 0 14px;
+}
+.seo-card h3{
+  font-size:clamp(16px, 2.2vw, 19px);
+  letter-spacing:-.01em;
+  color:var(--v-ink, #171717);
+  margin:26px 0 8px;
+}
+.seo-card p{margin:0 0 14px; font-size:15.5px;}
+.seo-card p:last-child{margin-bottom:0;}
+.seo-card b{color:var(--v-ink, #171717); font-weight:600;}
+
+@media (max-width:560px){
+  .seo-card{padding:24px 20px; border-radius:14px;}
+}
