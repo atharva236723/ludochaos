@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-98YC21CHJ1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-98YC21CHJ1');
+</script>
+<title>Play Ludo Chaos — Set Up Your Match | Classic & Chaos Modes</title>
+
+<!-- ===================== SEO / on-page metadata =====================
+     This is the play page (the setup menu + live game). The landing/home
+     page is index.html. -->
+<meta name="description" content="Set up your Ludo Chaos match: pick Classic or Chaos rules, choose 2–4 players, face the computer or pass and play, then roll. Free online Ludo, no download.">
+<meta name="keywords" content="ludo chaos, ludo, ludo game, ludo king, ludo online, game, play ludo, play ludo online, online game, chaos, online gaming, free game, interesting game, free ludo online, multiplayer ludo, ludo dice game, dice, classic game, two dice ludo, strategic ludo, easy game">
+<meta name="author" content="Ludo Chaos">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0b0e16">
+<link rel="canonical" href="https://ludochaos.com/play.html">
+<!-- emoji favicon as an inline SVG data URI — avoids a 404 with no asset file -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B2%3C/text%3E%3C/svg%3E">
+
+<!-- Open Graph (Facebook, WhatsApp, LinkedIn, Discord…) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ludo Chaos">
+<meta property="og:title" content="Play Ludo Chaos — Set Up Your Match | Classic & Chaos Modes">
+<meta property="og:description" content="Set up your Ludo Chaos match: pick Classic or Chaos rules, choose your players, and roll. Free online Ludo, no download.">
+<meta property="og:url" content="https://ludochaos.com/play.html">
+<meta property="og:image" content="https://ludochaos.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ludo Chaos — Classic and Chaos online Ludo board game">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Play Ludo Chaos — Set Up Your Match | Classic & Chaos Modes">
+<meta name="twitter:description" content="Set up your Ludo Chaos match: Classic or Chaos rules, multiplayer or vs computer. Free, no download.">
+<meta name="twitter:image" content="https://ludochaos.com/og-image.png">
+<meta name="twitter:image:alt" content="Ludo Chaos — Classic and Chaos online Ludo board game">
+
+<!-- Vercel-design type voice (DESIGN.md substitutes): Inter for the geometric
+     sans, JetBrains Mono for the technical/eyebrow labels. Used on the menu page. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Styles — split by section, see /css -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/start-screen.css">
+<link rel="stylesheet" href="css/board.css">
+<link rel="stylesheet" href="css/panel.css">
+<link rel="stylesheet" href="css/overlay.css">
+<!-- navbar + pages last: they reposition the sound button into the bar, so
+     they must win over overlay.css's floating-corner rules -->
+<link rel="stylesheet" href="css/navbar.css">
+<link rel="stylesheet" href="css/pages.css">
+<!-- SEO copy block shown beneath the menu (scoped to the menu state) -->
+<link rel="stylesheet" href="css/seo.css">
+<!-- Online multiplayer lobby + waiting room styles -->
+<link rel="stylesheet" href="css/online.css">
+<!-- Auth gate modal -->
+<link rel="stylesheet" href="css/auth.css">
+<!-- Lenis smooth-scroll engine (CDN) — see js/smooth.js -->
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.1.20/dist/lenis.css">
+</head>
+<body>
+
+<!-- The navbar (and, on content pages, the footer) is injected by js/nav.js
+     so there is a single source of truth across this multi-page site. The
+     home/landing page is index.html; the informational pages live in their
+     own documents: about.html, privacy.html, terms.html, contact.html,
+     profile.html. -->
+
+<h1>🎲 LUDO CHAOS</h1>
+<div class="sub">Two ways to play — the timeless classic, or rules turned upside-down.</div>
+
+<!-- ================= START SCREEN ================= -->
+<div id="start">
+  <!-- Vercel-style hero header (see DESIGN.md): mono eyebrow, display headline
+       with negative tracking, body lead, over a soft mesh-gradient backdrop. -->
+  <header class="start-head">
+    <span class="start-eyebrow">New game</span>
+    <h2 class="start-title">Set up your match.</h2>
+    <p class="start-sub">Pick a rule set, choose your players, and roll.</p>
+  </header>
+
+  <div class="cards">
+    <div class="card classic" data-mode="classic" onclick="selectMode('classic')">
+      <h2>👑 Classic Ludo <span class="tag">Traditional rules</span></h2>
+      <ul>
+        <li>Roll a <b>6</b> to bring a token out of home.</li>
+        <li>Land on an opponent to send it back home.</li>
+        <li>★ Star &amp; colored squares are <b>safe</b> zones.</li>
+        <li>Need an <b>exact</b> roll to reach the finish.</li>
+        <li>Rolling a 6, capturing, or finishing grants an extra turn.</li>
+      </ul>
+    </div>
+    <div class="card chaos" data-mode="chaos" onclick="selectMode('chaos')">
+      <h2>⚡ Chaos Ludo <span class="tag">Rules rewritten</span></h2>
+      <ul>
+        <li>Roll a <b>6</b> to bring a token out of home.</li>
+        <li>Need an <b>exact</b> roll to finish — a die that overshoots can't move.</li>
+        <li>★ Star squares are <b>safe</b> zones — just like Classic.</li>
+        <li><b>Capture first:</b> no pin may enter the home stretch until you've sent an opponent home.</li>
+        <li>A capture grants a bonus turn — but the <b>pin that struck can't move</b> on it.</li>
+        <li>🔄 Roll a <b>double 6</b> to reverse your direction for 4 moves.</li>
+      </ul>
+    </div>
+    <div class="card online" data-mode="online" onclick="openOnlineLobby()">
+      <h2>🌐 Online <span class="tag">Multiplayer</span></h2>
+      <ul>
+        <li>Play with friends or strangers <b>across the internet</b>.</li>
+        <li>Create a <b>public room</b> or share a private 6-letter code.</li>
+        <li>Rooms are filtered by rule set — <b>Classic</b> or <b>Chaos</b>.</li>
+        <li>2–4 players; host picks the rule set and dice count.</li>
+        <li>Requires a <b>Firebase</b> database (see setup instructions).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="opts">
+    <div class="optgrp">
+      <span class="lbl">Players</span>
+      <div class="seg" id="segPlayers">
+        <button class="neon-btn" data-n="2">2</button>
+        <button class="neon-btn" data-n="4">4</button>
+      </div>
+    </div>
+    <div class="optgrp">
+      <span class="lbl">Opponents</span>
+      <div class="seg" id="segAI">
+        <button class="neon-btn" data-ai="1">vs Computer</button>
+        <button class="neon-btn" data-ai="0">Pass &amp; Play</button>
+      </div>
+    </div>
+    <div class="optgrp" id="grpTeam">
+      <span class="lbl">Teams <span class="lbl-note" id="teamNote">Green+Blue vs Yellow+Red</span></span>
+      <div class="seg" id="segTeam">
+        <button class="neon-btn" data-team="0">No teams</button>
+        <button class="neon-btn" data-team="1">Team mode</button>
+      </div>
+    </div>
+    <div class="optgrp">
+      <span class="lbl">Dice</span>
+      <div class="seg" id="segDice">
+        <button class="neon-btn" data-dice="1">Single die</button>
+        <button class="neon-btn" data-dice="2">Double dice</button>
+      </div>
+    </div>
+    <button id="startBtn" class="neon-btn" onclick="startGame()" disabled>Start Game</button>
+  </div>
+</div>
+
+<!-- ================= ONLINE LOBBY ================= -->
+<div id="onlineLobby">
+
+  <div class="ol-head">
+    <button class="ol-back" onclick="closeOnlineLobby()">←</button>
+    <h2 class="ol-head-title">Online — Find a Game</h2>
+  </div>
+
+  <!-- Mode filter -->
+  <div class="ol-mode-row">
+    <span class="ol-label">Rule set</span>
+    <div class="seg" id="lobbyModeSeg">
+      <button class="neon-btn on" data-m="classic" onclick="setLobbyMode('classic')">👑 Classic</button>
+      <button class="neon-btn"    data-m="chaos"   onclick="setLobbyMode('chaos')">⚡ Chaos</button>
+    </div>
+  </div>
+
+  <!-- Public / Private tabs -->
+  <div class="ol-tabs">
+    <button class="lobby-tab on" data-tab="public"  onclick="setLobbyTab('public')">Public Rooms</button>
+    <button class="lobby-tab"    data-tab="private" onclick="setLobbyTab('private')">Join by Code</button>
+  </div>
+
+  <!-- Public rooms panel -->
+  <div id="publicRoomsPanel" style="width:100%">
+    <div id="roomList"><div class="ol-empty">Searching for rooms…</div></div>
+    <div class="ol-create-btn-row" style="margin-top:14px">
+      <button class="neon-btn" style="width:100%" onclick="openCreateModal()">+ Create a Room</button>
+    </div>
+  </div>
+
+  <!-- Private code panel -->
+  <div id="privateRoomPanel" style="display:none;width:100%">
+    <div class="ol-private-wrap">
+      <div>
+        <div class="cr-label" style="margin-bottom:8px">Enter room code</div>
+        <div class="ol-code-row">
+          <input id="privateCodeInput" class="ol-code-input" maxlength="6"
+            placeholder="ABC123" oninput="this.value=this.value.toUpperCase()">
+          <button class="neon-btn" onclick="onlineJoinRoom()">Join</button>
+        </div>
+      </div>
+      <div class="ol-divider">or</div>
+      <button class="neon-btn" style="width:100%" onclick="openCreateModal()">+ Create a Room</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= CREATE ROOM MODAL ================= -->
+<div id="createRoomModal">
+  <div class="cr-card">
+    <h2>Create a Room</h2>
+
+    <div class="cr-row">
+      <span class="cr-label">Rule set</span>
+      <div class="cr-seg" id="crMode">
+        <button class="neon-btn on" data-val="classic" onclick="setCROpt('mode','classic')">👑 Classic</button>
+        <button class="neon-btn"    data-val="chaos"   onclick="setCROpt('mode','chaos')">⚡ Chaos</button>
+      </div>
+    </div>
+
+    <div class="cr-row">
+      <span class="cr-label">Dice</span>
+      <div class="cr-seg" id="crDice">
+        <button class="neon-btn on" data-val="1" onclick="setCROpt('diceCount',1)">Single die</button>
+        <button class="neon-btn"    data-val="2" onclick="setCROpt('diceCount',2)">Double dice</button>
+      </div>
+    </div>
+
+    <div class="cr-row">
+      <span class="cr-label">Max players</span>
+      <div class="cr-seg" id="crMaxP">
+        <button class="neon-btn"    data-val="2" onclick="setCROpt('maxPlayers',2)">2</button>
+        <button class="neon-btn"    data-val="3" onclick="setCROpt('maxPlayers',3)">3</button>
+        <button class="neon-btn on" data-val="4" onclick="setCROpt('maxPlayers',4)">4</button>
+      </div>
+    </div>
+
+    <div class="cr-row">
+      <span class="cr-label">Visibility</span>
+      <div class="cr-seg" id="crPrivacy">
+        <button class="neon-btn on" data-val="public"  onclick="setCROpt('isPrivate',false)">🌐 Public</button>
+        <button class="neon-btn"    data-val="private" onclick="setCROpt('isPrivate',true)">🔒 Private</button>
+      </div>
+    </div>
+
+    <div class="cr-foot">
+      <button class="neon-btn secondary" onclick="closeCreateModal()">Cancel</button>
+      <button class="neon-btn" id="crCreateBtn" onclick="confirmCreateRoom()">Create Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WAITING ROOM ================= -->
+<div id="waitingRoom">
+
+  <div class="wr-head">
+    <div class="wr-head-top">
+      <h2>Waiting Room</h2>
+      <button class="wr-minimize" onclick="minimizeLobby()" title="Minimize — keep room open while you browse">— Minimize</button>
+    </div>
+    <div class="wr-tags">
+      <span class="wr-tag" id="wrModeTag">👑 Classic</span>
+      <span class="wr-tag" id="wrDiceTag">Single die</span>
+      <span class="wr-tag" id="wrPlayersTag">Up to 4 players</span>
+      <span class="wr-tag" id="wrVisibilityTag">🌐 Public</span>
+    </div>
+  </div>
+
+  <div class="wr-code-box">
+    <div class="wr-code-label">Room Code — share with friends</div>
+    <div id="wrCode">——</div>
+    <div class="wr-code-hint">Others can join from the Online → Join by Code tab</div>
+  </div>
+
+  <div id="wrSlots"></div>
+
+  <div class="wr-foot">
+    <button class="neon-btn" id="wrStartBtn" onclick="wrStartGame()" disabled style="width:100%">
+      Waiting for players…
+    </button>
+    <div id="wrWaitMsg" style="display:none">Waiting for the host to start the game…</div>
+    <button class="neon-btn secondary" onclick="leaveWaitingRoom()">Leave Room</button>
+  </div>
+
+</div>
+
+<!-- Minimized lobby notification — floats in corner when waiting room is minimized -->
+<div id="lobbyNotification" style="display:none">
+  <div class="ln-info">
+    <span class="ln-icon">🎲</span>
+    <div class="ln-text">
+      <span class="ln-code" id="lnCode">——</span>
+      <span class="ln-count" id="lnCount">1 player waiting</span>
+    </div>
+  </div>
+  <div class="ln-actions">
+    <button class="neon-btn" onclick="restoreLobby()">Open Lobby</button>
+    <button class="neon-btn secondary" onclick="leaveWaitingRoom()">Leave</button>
+  </div>
+</div>
+
+<!-- Waiting room: click a player slot to see their profile -->
+<div id="wrProfileModal" style="display:none" onclick="if(event.target===this)closeWrProfile()">
+  <div class="wrp-card">
+    <button class="wrp-close" onclick="closeWrProfile()">✕</button>
+    <div class="wrp-avatar" id="wrpAvatar"></div>
+    <div class="wrp-name"   id="wrpName"></div>
+    <div class="wrp-tagline" id="wrpTagline"></div>
+    <div class="wrp-stats">
+      <div class="wrp-stat"><span id="wrpGames">0</span><label>Games</label></div>
+      <div class="wrp-stat"><span id="wrpWins">0</span><label>Wins</label></div>
+      <div class="wrp-stat"><span id="wrpRate">0%</span><label>Win Rate</label></div>
+    </div>
+  </div>
+</div>
+
+<!-- Match-start animation: shown when the lobby fills, plays a 3-2-1 countdown
+     before handing off to the board build. All animation is CSS-driven. -->
+<div id="gameStartingOverlay" style="display:none">
+
+  <!-- Slow-drifting four-color glow behind everything -->
+  <div class="gs-bg"></div>
+
+  <!-- The circular orbit track -->
+  <div class="gs-ring"></div>
+
+  <!-- 4 Ludo pins orbiting the ring, 90° apart.
+       --orbit-delay offsets each by 1/4 of the 3.5 s period so they start
+       evenly spaced; --c is inherited by .gs-pin-body via CSS fill. -->
+  <div class="gs-orbit-wrap" style="--orbit-delay:0s;     --c:var(--green)">
+    <div class="gs-pin-wrap">
+      <svg viewBox="0 0 24 33" xmlns="http://www.w3.org/2000/svg">
+        <path class="gs-pin-body" d="M12 1C6 1 1 5.8 1 11.6 1 19.6 12 32 12 32 12 32 23 19.6 23 11.6 23 5.8 18 1 12 1Z"/>
+        <circle cx="12" cy="11.6" r="4.7" fill="rgba(255,255,255,.75)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="gs-orbit-wrap" style="--orbit-delay:-0.875s;--c:var(--yellow)">
+    <div class="gs-pin-wrap">
+      <svg viewBox="0 0 24 33" xmlns="http://www.w3.org/2000/svg">
+        <path class="gs-pin-body" d="M12 1C6 1 1 5.8 1 11.6 1 19.6 12 32 12 32 12 32 23 19.6 23 11.6 23 5.8 18 1 12 1Z"/>
+        <circle cx="12" cy="11.6" r="4.7" fill="rgba(255,255,255,.75)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="gs-orbit-wrap" style="--orbit-delay:-1.75s; --c:var(--blue)">
+    <div class="gs-pin-wrap">
+      <svg viewBox="0 0 24 33" xmlns="http://www.w3.org/2000/svg">
+        <path class="gs-pin-body" d="M12 1C6 1 1 5.8 1 11.6 1 19.6 12 32 12 32 12 32 23 19.6 23 11.6 23 5.8 18 1 12 1Z"/>
+        <circle cx="12" cy="11.6" r="4.7" fill="rgba(255,255,255,.75)"/>
+      </svg>
+    </div>
+  </div>
+  <div class="gs-orbit-wrap" style="--orbit-delay:-2.625s;--c:var(--red)">
+    <div class="gs-pin-wrap">
+      <svg viewBox="0 0 24 33" xmlns="http://www.w3.org/2000/svg">
+        <path class="gs-pin-body" d="M12 1C6 1 1 5.8 1 11.6 1 19.6 12 32 12 32 12 32 23 19.6 23 11.6 23 5.8 18 1 12 1Z"/>
+        <circle cx="12" cy="11.6" r="4.7" fill="rgba(255,255,255,.75)"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Centre: eyebrow label, live countdown number, game name -->
+  <div class="gs-center">
+    <p class="gs-eyebrow">All players ready</p>
+    <div class="gs-numbox" id="gsNumBox"></div>
+    <p class="gs-gametitle">🎲 Ludo Chaos</p>
+  </div>
+
+</div>
+
+<!-- ================= SEO CONTENT =================
+     ~600 words of indexable copy about the game. Scoped (in css/seo.css) to
+     the menu state so it appears under the setup panel but is hidden during
+     active play. Written for the target keywords while staying genuinely
+     useful to a first-time visitor. -->
+<section id="seo" class="seo-wrap" aria-label="About Ludo Chaos">
+  <article class="seo-card">
+    <h2>Play Ludo Chaos — Free Ludo Online, Two Ways</h2>
+    <p><b>Ludo Chaos</b> is a free <b>Ludo online</b> game you can play instantly in
+      your browser — no downloads, no sign-ups, no waiting. It takes the
+      <b>classic game</b> of Ludo that millions grew up with and gives you two
+      distinct ways to play: a faithful <b>Classic</b> rule set and an
+      unpredictable <b>Chaos</b> mode. Whether you want a relaxed, familiar
+      <b>ludo game</b> or a wild, strategic twist, you can <b>play Ludo online</b>
+      against the computer or with friends on the same device in seconds.</p>
+
+    <h3>Classic Ludo, faithfully recreated</h3>
+    <p>If you love the original, <b>Classic</b> mode is for you. It plays exactly
+      like the <b>ludo king</b>-style board you already know: roll a six to bring a
+      token out of base, race your four pins clockwise around the track, land on an
+      opponent to send their token home, and rest on the star and colored safe
+      squares along the way. You need an exact roll to reach the finish — overshoot
+      and you simply can't play that die. Rolling a six, capturing an opponent, or
+      finishing a token all grant a bonus turn. It's the timeless, easy
+      <b>classic game</b> of <b>play ludo</b> sessions, polished for the web.</p>
+
+    <h3>Chaos mode — the rules, rewritten</h3>
+    <p>Want something fresh? <b>Chaos</b> mode keeps the heart of Ludo but rewrites
+      the rules for maximum drama. A <b>capture-first gate</b> means no pin may
+      enter its home stretch until you've sent an opponent home — rewarding
+      aggressive, <b>strategic ludo</b> play. Every capture earns a bonus turn, but
+      the pin that struck can't move on it. Rolling a <b>double 6</b> lets you
+      reverse your direction for 4 moves, flipping the whole race. ★ Safe squares
+      still protect you mid-track, just like Classic. It's the same beloved
+      <b>ludo dice game</b>, turned upside down.</p>
+
+    <h3>Multiplayer, dice options, and instant play</h3>
+    <p>Ludo Chaos is built for everyone at the table. Choose two or four
+      players for true <b>multiplayer ludo</b>: pass and play on one screen, or
+      take on a sharp computer opponent with adjustable difficulty. Prefer a
+      faster, higher-variance race? Switch on <b>two dice ludo</b> and roll a pair
+      each turn. Every roll of the <b>dice</b> is animated, every capture has
+      weight, and synthesized sound effects bring the board to life — all from a
+      lightweight page that loads fast on phones, tablets and desktops alike.</p>
+
+    <h3>Why players love this online game</h3>
+    <p>As a <b>free game</b> that runs entirely in your browser, Ludo Chaos respects
+      your time and your privacy — there are no accounts and no trackers, just the
+      board and the dice. It's an <b>interesting game</b> that's easy to learn yet
+      deep enough to master, perfect for a quick break or a long match with
+      friends. If you've been searching for <b>free ludo online</b>, a fresh take on
+      <b>online gaming</b>, or simply the best place to <b>play ludo online</b>,
+      Ludo Chaos delivers both nostalgia and novelty in one place.</p>
+
+    <h3>How to play Ludo Chaos</h3>
+    <p>Getting started is simple, which is part of what makes this such an
+      <b>easy game</b> to pick up. Choose your rule set — <b>Classic</b> or
+      <b>Chaos</b> — then select how many players join and whether you're facing
+      the computer or passing the device around. On your turn, tap the
+      <b>dice</b> to roll. Move a token out of base with a six, advance your pins
+      around the loop, and aim to guide all four safely into your home column
+      before your rivals do. Capture opponents to slow them down, use the safe
+      squares wisely in Classic, and brace for surprises in Chaos. The first
+      player to bring every token home wins. Master the timing, read the board,
+      and a little luck of the <b>dice</b> turns into real, <b>strategic ludo</b>
+      victories.</p>
+
+    <p>Ready to roll? Pick <b>Classic</b> or <b>Chaos</b> above, choose your players
+      and dice, and start your game. The board is set, the dice are waiting — it's
+      time to play <b>Ludo Chaos</b>.</p>
+  </article>
+</section>
+
+<!-- ================= GAME SCREEN ================= -->
+<div id="game">
+  <!-- compact brand, tucked top-left -->
+  <div class="brand">🎲 Ludo Chaos</div>
+  <!-- the only chrome left: a small corner button that exits to the menu,
+       guarded by a confirmation so a mid-game tap doesn't toss the match -->
+  <button class="menuBtn neon-btn" onclick="confirmExit()" title="Exit to menu">Exit</button>
+
+  <div class="game-wrap">
+    <!-- boardZone holds the board plus the die, which sits OUTSIDE the board
+         (on its edge) so it isn't clipped by the board's overflow -->
+    <div class="boardZone">
+      <div class="board" id="board">
+        <div class="tokenLayer" id="tokenLayer"></div>
+      </div>
+      <!-- a bouncing arrow points at the current player's die -->
+      <div class="dieArrow" id="dieArrow">▲</div>
+      <!-- one die per house corner, built in buildDice(). Each keeps showing its
+           owner's last roll (as pips) until that player rolls again; only the
+           current player's die is active and tappable. -->
+      <div id="diceLayer"></div>
+      <!-- player identity cards (avatar + name) rendered by renderPlayerCorners()
+           in the top/bottom padding strips — outside the board playing area -->
+      <div id="playerLayer"></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="overlay">
+  <div class="winCard">
+    <h2 id="winText">🏆 Winner!</h2>
+    <div id="winSub" style="opacity:.8;"></div>
+    <button class="neon-btn" onclick="quitToMenu()">Play Again</button>
+  </div>
+</div>
+
+<!-- "double 6" reverse-direction prompt (see js/reverse.js). Shown only
+     to a human who just rolled a double 6; the AI decides without it. -->
+<div id="reversePrompt">
+  <div class="revCard">
+    <h2>🔄 Double 6!</h2>
+    <div style="opacity:.85;">Reverse your direction for the next 4 moves?<br>
+      Your pins will travel <b>backward</b> around the board.</div>
+    <div class="revBtns">
+      <button class="neon-btn" onclick="chooseReverse(true)">🔄 Reverse</button>
+      <button class="neon-btn" onclick="chooseReverse(false)">Keep forward ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- live indicator while a player is travelling backward -->
+<div id="reverseBadge"></div>
+<!-- online mode: shows whose turn it is -->
+<div id="onlineTurnBadge" class="online-turn-badge" style="display:none"></div>
+
+<!-- Exit confirmation — asks before abandoning a game in progress -->
+<div id="confirmOverlay">
+  <div class="winCard">
+    <h2>Exit game?</h2>
+    <div style="opacity:.8;">Your current game will be lost.</div>
+    <div class="confirmBtns">
+      <button class="neon-btn" onclick="hideConfirmExit()">Keep Playing</button>
+      <button class="neon-btn danger" onclick="doExit()">Exit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Team mode modal (4 players) — confirms the diagonal house pairing.
+     Opens when "Team mode" is toggled on in the options bar. -->
+<div id="teamModal">
+  <div class="teamCard">
+    <h2>Team Mode</h2>
+    <p class="team-modal-sub">Diagonal houses pair up as one team. Teammates share a win and can't capture each other.</p>
+    <div class="team-pairings">
+      <div class="team-pairing sel" style="pointer-events:none; cursor:default">
+        <div class="two-p-info">
+          <b>Diagonal teams</b>
+          <span>Green &amp; Blue vs Yellow &amp; Red — the only valid pairing</span>
+        </div>
+        <div class="two-p-pins">
+          <span class="tpin" style="background:var(--green)"></span>
+          <span class="tpin" style="background:var(--blue)"></span>
+          <span class="team-vs">vs</span>
+          <span class="tpin" style="background:var(--yellow)"></span>
+          <span class="tpin" style="background:var(--red)"></span>
+        </div>
+      </div>
+    </div>
+    <div class="team-modal-btns">
+      <button class="neon-btn secondary" onclick="cancelTeamModal()">Cancel</button>
+      <button class="neon-btn" onclick="confirmTeamModal()">Enable Teams</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2-player setup modal — opened when the user picks 2 players.
+     Asks: single house (standard diagonal) or double house (diagonal teams). -->
+<div id="twoPlayerModal">
+  <div class="teamCard">
+    <h2>2-Player Setup</h2>
+    <p class="team-modal-sub">How many houses will each player control?</p>
+    <div class="team-pairings" id="twoPlayerPairings">
+
+      <!-- Option 0: single house — Green vs Blue, diagonal corners, Yellow+Red empty -->
+      <div class="team-pairing sel" data-mode="0" onclick="select2PMode(0)">
+        <div class="two-p-info">
+          <b>Single house each</b>
+          <span>Green vs Blue — diagonal corners. Yellow &amp; Red corners are empty.</span>
+        </div>
+        <div class="two-p-pins">
+          <span class="tpin" style="background:var(--green)"></span>
+          <span class="team-vs">vs</span>
+          <span class="tpin" style="background:var(--blue)"></span>
+        </div>
+      </div>
+
+      <!-- Option 1: double house — Green+Blue vs Yellow+Red (diagonal teams) -->
+      <div class="team-pairing" data-mode="1" onclick="select2PMode(1)">
+        <div class="two-p-info">
+          <b>Double house each</b>
+          <span>Each player controls two diagonal houses. Pieces on the same side can't capture each other.</span>
+        </div>
+        <div class="two-p-pins">
+          <span class="tpin" style="background:var(--green)"></span>
+          <span class="tpin" style="background:var(--blue)"></span>
+          <span class="team-vs">vs</span>
+          <span class="tpin" style="background:var(--yellow)"></span>
+          <span class="tpin" style="background:var(--red)"></span>
+        </div>
+      </div>
+
+    </div>
+    <div class="team-modal-btns">
+      <button class="neon-btn secondary" onclick="cancel2PModal()">Cancel</button>
+      <button class="neon-btn" onclick="confirm2PModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Leave-page warning — the on-site replacement for the browser's native
+     "Leave site?" dialog. Shown by js/guard.js when a navbar/footer link is
+     clicked mid-game; navigating away would discard the current match. -->
+<!-- ================= AUTH MODAL =================
+     Shown when the user clicks Online without being logged in.
+     On success the callback re-fires openOnlineLobby() automatically. -->
+<div id="authModal" style="display:none" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-card">
+    <button class="auth-close" onclick="closeAuthModal()">✕</button>
+    <div class="auth-icon">🌐</div>
+    <h2 class="auth-title">Play Online</h2>
+    <p class="auth-sub">Sign in to host or join a multiplayer room.</p>
+    <!-- Google Sign-In (primary path) -->
+    <button class="auth-google-btn" id="authGoogleBtn" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908C16.658 14.013 17.64 11.705 17.64 9.2z"/>
+        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+        <path fill="#FBBC05" d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332z"/>
+        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 6.294C4.672 4.167 6.656 3.58 9 3.58z"/>
+      </svg>
+      Continue with Google
+    </button>
+    <div class="auth-divider"><span>or</span></div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="authTabLogin"  onclick="switchAuthTab('login')">Log In</button>
+      <button class="auth-tab"    id="authTabSignup" onclick="switchAuthTab('signup')">Sign Up</button>
+    </div>
+    <!-- Log In form -->
+    <div id="authLoginForm">
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" type="email" id="authLoginEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" type="password" id="authLoginPass" placeholder="••••••••"
+          autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuthLogin()">
+      </div>
+      <div class="auth-err" id="authLoginErr"></div>
+      <button class="neon-btn" style="width:100%;margin-top:4px" onclick="submitAuthLogin()">Log In</button>
+    </div>
+    <!-- Sign Up form -->
+    <div id="authSignupForm" style="display:none">
+      <div class="auth-field">
+        <label class="auth-label">Your name</label>
+        <input class="auth-input" type="text" id="authSignupName" placeholder="How you appear in-game" autocomplete="nickname">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input class="auth-input" type="email" id="authSignupEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" type="password" id="authSignupPass" placeholder="Min 6 characters"
+          autocomplete="new-password" onkeydown="if(event.key==='Enter')submitAuthSignup()">
+      </div>
+      <div class="auth-err" id="authSignupErr"></div>
+      <button class="neon-btn" style="width:100%;margin-top:4px" onclick="submitAuthSignup()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<div id="leaveOverlay">
+  <div class="winCard">
+    <h2>Leave the game?</h2>
+    <div style="opacity:.8;">A game is still in progress. If you leave this page now,
+      your current match will be lost.</div>
+    <div class="confirmBtns">
+      <button class="neon-btn" onclick="cancelLeave()">Keep Playing</button>
+      <button class="neon-btn danger" onclick="confirmLeave()">Leave</button>
+    </div>
+  </div>
+</div>
+
+<!--
+  Scripts — split by responsibility, see /js. Load order matters:
+  config/helpers first, then state, then the build/render/turn/move logic.
+-->
+<script src="js/prefs.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/config.js"></script>
+<script src="js/helpers.js"></script>
+<script src="js/state.js"></script>
+<script src="js/guard.js"></script>
+<script src="js/board.js"></script>
+<script src="js/render.js"></script>
+<script src="js/turns.js"></script>
+<script src="js/moves.js"></script>
+<script src="js/animate.js"></script>
+<script src="js/resolution.js"></script>
+<script src="js/ai.js"></script>
+<!-- chaos reverse-direction feature (double 6) — after ai.js: it calls aiReverseChoice -->
+<script src="js/reverse.js"></script>
+<script src="js/winner.js"></script>
+<!-- Firebase Realtime Database (CDN compat build — no bundler needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="window._firebaseFailed=true"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js" onerror="window._firebaseFailed=true"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js" onerror="window._firebaseFailed=true"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/online.js"></script>
+<!-- Lenis smooth scrolling — library from CDN, then our init (chrome only) -->
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<script src="js/smooth.js"></script>
+<!-- navbar + informational pages — chrome only, independent of game state -->
+<script src="js/nav.js"></script>
+<script src="js/transition.js"></script>
+</body>
+</html>
