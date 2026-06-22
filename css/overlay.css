@@ -1,0 +1,131 @@
+/* =====================================================================
+   OVERLAY & CONTROLS — winner pop-up and the floating sound toggle.
+===================================================================== */
+#overlay{position:fixed; inset:0; background:rgba(23,23,23,.45); display:none;
+  align-items:center; justify-content:center; z-index:50;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+.winCard{background:var(--v-canvas); border:1px solid var(--v-hairline); border-radius:16px;
+  padding:34px 42px; text-align:center; color:var(--v-ink);
+  box-shadow:var(--v-elev-5);
+  animation:winPop .5s cubic-bezier(.22,1.4,.5,1) both;}
+@keyframes winPop{0%{opacity:0; transform:translateY(20px) scale(.9);}
+  100%{opacity:1; transform:translateY(0) scale(1);}}
+.winCard h2{font-family:var(--v-sans); font-size:30px; font-weight:600; letter-spacing:-.03em;
+  margin-bottom:10px; color:var(--v-ink);}
+.winCard > div{color:var(--v-body);}
+/* the Play Again button is the ink primary pill */
+.winCard button{margin-top:18px;}
+.winCard > button{
+  color:var(--v-btn-fg); background:var(--v-btn-bg); border-color:var(--v-btn-bg);
+  font-size:16px; line-height:24px; padding:0 24px; height:48px;}
+.winCard > button:hover{background:var(--v-btn-bg-hover); color:var(--v-btn-fg); box-shadow:0 6px 20px rgba(0,0,0,.18);}
+
+/* exit confirmation — reuses the winCard look; sits above the board (z 55) so
+   it covers the game but below the floating sound chip (z 60) */
+#confirmOverlay{position:fixed; inset:0; background:rgba(23,23,23,.45); display:none;
+  align-items:center; justify-content:center; z-index:55;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+.confirmBtns{display:flex; gap:12px; justify-content:center; margin-top:20px;}
+
+/* leave-page warning — the on-site stand-in for the browser's native
+   "Leave site?" dialog (see js/guard.js). Same look as the exit confirmation,
+   sits above the board and just under the floating sound chip (z 60). */
+#leaveOverlay{position:fixed; inset:0; background:rgba(23,23,23,.45); display:none;
+  align-items:center; justify-content:center; z-index:56;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+/* the destructive choice — error red, filled */
+.neon-btn.danger{color:#fff; background:var(--v-error); border-color:var(--v-error); box-shadow:var(--v-elev-2);}
+.neon-btn.danger:hover{color:#fff; background:var(--v-error-deep); border-color:var(--v-error-deep);
+  box-shadow:0 6px 20px rgba(238,0,0,.22);}
+
+/* Chaos reverse-direction prompt — reuses the winCard look, sits above the
+   board (z 52) but below the exit confirmation (55) and sound chip (60).
+   Hidden by default; reverse.js toggles .show. */
+#reversePrompt{position:fixed; inset:0; background:rgba(23,23,23,.4); display:none;
+  align-items:center; justify-content:center; z-index:52;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+#reversePrompt.show{display:flex;}
+.revCard{background:var(--v-canvas); border:1px solid var(--v-hairline); border-radius:16px;
+  padding:28px 34px; text-align:center; max-width:90vw; color:var(--v-ink);
+  box-shadow:var(--v-elev-5);
+  animation:winPop .4s cubic-bezier(.22,1.4,.5,1) both;}
+.revCard h2{font-family:var(--v-sans); font-size:26px; font-weight:600; letter-spacing:-.03em;
+  margin-bottom:10px; color:var(--v-ink);}
+.revCard > div{color:var(--v-body);}
+.revBtns{display:flex; gap:12px; justify-content:center; margin-top:20px; flex-wrap:wrap;}
+
+/* the "you're going backward" indicator — an ink chip, top-center, so it reads
+   over the (dark) board */
+#reverseBadge{position:fixed; top:14px; left:50%; transform:translateX(-50%);
+  z-index:40; display:none; padding:7px 16px; border-radius:9999px;
+  font-family:var(--v-sans); font-size:13px; font-weight:500; letter-spacing:0; color:var(--v-btn-fg);
+  background:var(--v-btn-bg); border:1px solid var(--v-btn-bg);
+  box-shadow:var(--v-elev-3);}
+#reverseBadge.show{display:block;}
+
+/* ---- Team mode modal (4-player) & 2-player setup modal ---- */
+#teamModal{position:fixed; inset:0; background:rgba(23,23,23,.45); display:none;
+  align-items:center; justify-content:center; z-index:57;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+#teamModal.show{display:flex;}
+#twoPlayerModal{position:fixed; inset:0; background:rgba(23,23,23,.45); display:none;
+  align-items:center; justify-content:center; z-index:57;
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+#twoPlayerModal.show{display:flex;}
+/* shared card shell (reused by any pre-game modal) */
+.teamCard{background:var(--v-canvas); border:1px solid var(--v-hairline); border-radius:16px;
+  padding:28px 32px; text-align:center; color:var(--v-ink);
+  box-shadow:var(--v-elev-5); max-width:440px; width:90vw;
+  animation:winPop .4s cubic-bezier(.22,1.4,.5,1) both;}
+.teamCard h2{font-family:var(--v-sans); font-size:22px; font-weight:600; letter-spacing:-.03em;
+  margin:0 0 6px; color:var(--v-ink);}
+.team-modal-sub{font-family:var(--v-sans); font-size:13px; color:var(--v-body); margin:0 0 18px;}
+/* option list */
+.team-pairings{display:flex; flex-direction:column; gap:8px; margin-bottom:20px; text-align:left;}
+.team-pairing{
+  display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px;
+  cursor:pointer; border:2px solid var(--v-hairline); background:var(--v-canvas-soft);
+  transition:border-color .15s, background .15s, transform .12s cubic-bezier(.34,1.56,.64,1);
+}
+.team-pairing:hover{border-color:var(--v-hairline-strong); background:var(--v-canvas-soft-2);}
+.team-pairing.sel{border-color:var(--v-btn-bg); background:var(--v-canvas);
+  box-shadow:0 0 0 1px var(--v-btn-bg);}
+/* shared pin dot and "vs" label */
+.tpin{display:inline-block; width:18px; height:18px; border-radius:50%; flex-shrink:0;
+  border:1.5px solid rgba(0,0,0,.10);}
+.team-vs{font-family:var(--v-mono); font-size:11px; color:var(--v-mute); letter-spacing:.04em;
+  flex-shrink:0; padding:0 4px;}
+/* button row */
+.team-modal-btns{display:flex; gap:10px; justify-content:center;}
+/* neutralise neon glow inside the modal; restyle as clean Vercel pills */
+.teamCard .neon-btn{
+  animation:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  text-shadow:none; isolation:auto; overflow:visible;
+  font-family:var(--v-sans); font-weight:500; font-size:14px; line-height:20px;
+  padding:8px 20px; border-radius:9999px; letter-spacing:0;
+  background:var(--v-btn-bg); color:var(--v-btn-fg); border-color:var(--v-btn-bg); box-shadow:none;
+}
+.teamCard .neon-btn::before,.teamCard .neon-btn::after{display:none !important;}
+.teamCard .neon-btn:hover{background:var(--v-btn-bg-hover); color:var(--v-btn-fg);}
+.teamCard .neon-btn.secondary{
+  background:var(--v-canvas); color:var(--v-ink); border:1px solid var(--v-hairline);}
+.teamCard .neon-btn.secondary:hover{
+  background:var(--v-canvas-soft-2); border-color:var(--v-hairline-strong); color:var(--v-ink);}
+/* 2-player option: text block on left, pin dots on right */
+.two-p-info{flex:1; min-width:0;}
+.two-p-info b{font-family:var(--v-sans); font-size:13px; font-weight:600; color:var(--v-ink); display:block;}
+.two-p-info span{font-family:var(--v-sans); font-size:12px; color:var(--v-body);}
+.two-p-pins{display:flex; align-items:center; gap:4px; flex-shrink:0;}
+
+/* mute / sound toggle — a round white icon button (icon-button-circular) */
+#soundBtn{position:fixed; top:14px; right:14px; z-index:60;
+  width:46px; height:46px; border-radius:50%; cursor:pointer;
+  background:var(--v-canvas);
+  border:1px solid var(--v-hairline); color:var(--v-ink);
+  font-size:18px; display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--v-elev-2); transition:transform .18s ease, box-shadow .25s ease, border-color .2s;}
+#soundBtn:hover{border-color:var(--v-hairline-strong); transform:scale(1.08);
+  box-shadow:var(--v-elev-3);}
+#soundBtn:active{transform:scale(.95);}
+#soundBtn.muted{opacity:.55;}
+

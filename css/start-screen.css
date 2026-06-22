@@ -1,0 +1,184 @@
+/* =====================================================================
+   START SCREEN — mode-selection cards and the options bar.
+
+   This page (the menu you land on after pressing Play) is reskinned in the
+   Vercel design language from DESIGN.md: a stark near-white canvas, ink-black
+   type set in Inter with negative tracking, mono eyebrows, pill CTAs, white
+   cards held by hairline borders + stacked shadows, and the brand's multi-stop
+   mesh gradient (cyan/blue/magenta/amber) as the only decoration.
+
+   EVERY rule is scoped to `body:has(#start):not(.show-landing):not(.in-game)`
+   — i.e. the menu state on index.html only — so the dark landing, the dark
+   in-game board, and the separate info pages are left completely untouched.
+===================================================================== */
+
+/* ---- menu page surface ----
+   The --v-* palette tokens used to be re-declared here (a hardcoded light set),
+   but that pinned the menu to the bright theme and overrode the global
+   [data-theme] swaps. They now cascade from :root (base.css), so the menu
+   follows whatever colour theme is active; only the page-surface defaults are
+   set here. */
+body:has(#start):not(.show-landing):not(.in-game){
+  background:var(--v-canvas-soft);
+  color:var(--v-ink);
+  font-family:var(--v-sans);
+}
+/* drop the dark page's ambient orbs while the light menu is up */
+body:has(#start):not(.show-landing):not(.in-game)::before,
+body:has(#start):not(.show-landing):not(.in-game)::after{display:none;}
+/* the start panel carries its own hero header, so the global title steps aside */
+body:has(#start):not(.show-landing):not(.in-game) > h1,
+body:has(#start):not(.show-landing):not(.in-game) > .sub{display:none;}
+body:has(#start):not(.show-landing):not(.in-game) ::selection{background:var(--v-ink); color:var(--v-canvas);}
+
+/* ---- the navbar adopts the active theme's surface ON THIS PAGE ---- */
+body:has(#start):not(.show-landing):not(.in-game) #navbar{
+  background:var(--v-nav-bg);
+  border-bottom:1px solid var(--v-nav-border);
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+body:has(#start):not(.show-landing):not(.in-game) .nav-brand,
+body:has(#start):not(.show-landing):not(.in-game) .nav-word,
+body:has(#start):not(.show-landing):not(.in-game) .nav-link{color:var(--v-ink);}
+body:has(#start):not(.show-landing):not(.in-game) .nav-link{opacity:1; color:var(--v-body); font-family:var(--v-sans);}
+body:has(#start):not(.show-landing):not(.in-game) .nav-link:hover{background:var(--v-canvas-soft-2); color:var(--v-ink);}
+body:has(#start):not(.show-landing):not(.in-game) .nav-link.active{color:var(--v-ink);}
+body:has(#start):not(.show-landing):not(.in-game) .nav-link::after{display:none;}
+/* =====================================================================
+   START PANEL
+===================================================================== */
+#start{max-width:960px; width:100%;}
+
+/* ---- hero header: mono eyebrow + display headline + lead, on a mesh wash ---- */
+.start-head{position:relative; padding:8px 4px 26px; margin-bottom:8px; isolation:isolate;}
+/* the brand mesh gradient — atmospheric, blurred, hero-scale only */
+.start-head::before{
+  content:""; position:absolute; z-index:-1; inset:-40px -10% auto -10%; height:200px;
+  background:
+    radial-gradient(42% 70% at 12% 30%, color-mix(in srgb, var(--v-g-blue) 32%, transparent), transparent 70%),
+    radial-gradient(40% 70% at 42% 0%,  color-mix(in srgb, var(--v-g-violet) 30%, transparent), transparent 70%),
+    radial-gradient(44% 75% at 72% 22%, color-mix(in srgb, var(--v-g-pink) 26%, transparent), transparent 70%),
+    radial-gradient(46% 80% at 92% 55%, color-mix(in srgb, var(--v-g-amber) 24%, transparent), transparent 72%);
+  filter:blur(26px); opacity:.9; pointer-events:none;
+}
+.start-eyebrow{
+  display:inline-block; font-family:var(--v-mono); font-size:12px; line-height:16px;
+  letter-spacing:.04em; text-transform:uppercase; color:var(--v-body);
+  padding:4px 10px; border:1px solid var(--v-hairline); border-radius:9999px;
+  background:var(--v-chip-bg); backdrop-filter:blur(6px);
+}
+.start-title{
+  margin:16px 0 8px; font-family:var(--v-sans); font-weight:600; color:var(--v-ink);
+  font-size:clamp(32px,5vw,48px); line-height:1.02; letter-spacing:-0.04em;
+}
+.start-sub{
+  margin:0; font-family:var(--v-sans); font-weight:400; color:var(--v-body);
+  font-size:18px; line-height:28px; max-width:46ch;
+}
+
+/* ---- mode cards: white canvas, hairline + stacked shadow; selected flips to ink ---- */
+.cards{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:680px){.cards{grid-template-columns:1fr;}}
+.card{
+  background:var(--v-canvas); border:1px solid var(--v-hairline); border-radius:12px;
+  padding:24px; cursor:pointer; position:relative; color:var(--v-ink);
+  box-shadow:var(--v-elev-2);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, border-color .18s ease, background .22s ease, color .18s ease;
+}
+.card:hover{transform:translateY(-3px); box-shadow:var(--v-elev-4); border-color:var(--v-hairline-strong);}
+.card h2{
+  font-family:var(--v-sans); font-weight:600; font-size:20px; line-height:28px;
+  letter-spacing:-0.02em; color:var(--v-ink);
+  margin-bottom:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+/* drop the old green/red headings — the Vercel palette is ink + gray + gradient;
+   colour lives in the emoji glyph and the mesh wash only */
+.card.classic h2, .card.chaos h2{color:var(--v-ink);}
+.card .tag{
+  font-family:var(--v-mono); font-size:12px; line-height:16px; font-weight:400;
+  text-transform:none; letter-spacing:0;
+  padding:2px 9px; border-radius:9999px;
+  background:var(--v-canvas-soft); color:var(--v-body); border:1px solid var(--v-hairline);
+}
+.card ul{
+  margin:14px 0 0; padding-left:18px;
+  font-family:var(--v-sans); font-size:14px; line-height:1.65; color:var(--v-body);
+}
+.card ul b{color:var(--v-ink); font-weight:500;}
+
+/* selected = full brand-gradient flip — vivid, dramatic, impossible to miss */
+.card.sel{
+  background:linear-gradient(135deg, var(--v-g-blue) 0%, var(--v-g-violet) 45%, var(--v-g-pink) 80%, var(--v-g-amber) 100%);
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 20px 56px rgba(121,40,202,.45), 0 8px 24px rgba(0,124,240,.35), 0 2px 8px rgba(0,0,0,.18);
+  transform:translateY(-10px) scale(1.04);
+}
+.card.sel h2, .card.sel.classic h2, .card.sel.chaos h2{color:#fff;}
+.card.sel ul{color:rgba(255,255,255,.82);}
+.card.sel ul b{color:#fff;}
+.card.sel .tag{
+  background:rgba(255,255,255,.18);
+  color:rgba(255,255,255,.92);
+  border-color:rgba(255,255,255,.28);
+}
+
+/* =====================================================================
+   OPTIONS BAR
+===================================================================== */
+.opts{
+  margin-top:24px; background:var(--v-canvas); border:1px solid var(--v-hairline);
+  border-radius:12px; padding:24px; display:flex; flex-wrap:wrap; gap:28px;
+  align-items:flex-end; box-shadow:var(--v-elev-2);
+}
+.optgrp{display:flex; flex-direction:column; gap:10px;}
+.optgrp .lbl{
+  font-family:var(--v-mono); font-size:12px; line-height:16px;
+  text-transform:uppercase; letter-spacing:.04em; color:var(--v-mute); opacity:1;
+}
+.lbl-note{
+  font-family:var(--v-sans); font-size:10px; font-weight:400;
+  text-transform:none; letter-spacing:0; opacity:.6;
+}
+.seg{display:flex; gap:8px;}
+
+/* neutralise the dark neon-button chrome inside the menu, then restyle clean */
+#start .neon-btn{
+  animation:none; backdrop-filter:none; -webkit-backdrop-filter:none;
+  text-shadow:none; isolation:auto; overflow:visible;
+}
+#start .neon-btn::before, #start .neon-btn::after{display:none !important;}
+
+/* segmented toggles — white pill buttons, hairline border; .on flips to ink */
+.seg .neon-btn{
+  font-family:var(--v-sans); font-weight:500; font-size:14px; line-height:20px;
+  padding:8px 16px; border-radius:9999px;
+  background:var(--v-canvas); color:var(--v-ink); border:1px solid var(--v-hairline);
+  box-shadow:none; letter-spacing:0;
+  transition:background .15s ease, color .15s ease, border-color .15s ease, transform .12s ease;
+}
+.seg .neon-btn:hover{background:var(--v-canvas-soft-2); border-color:var(--v-hairline-strong); transform:none; color:var(--v-ink);}
+.seg .neon-btn.on{background:var(--v-btn-bg); color:var(--v-btn-fg); border-color:var(--v-btn-bg); box-shadow:none;}
+
+/* the primary CTA — the canonical black 100px pill (button-primary) */
+#startBtn.neon-btn{
+  margin-left:auto;
+  font-family:var(--v-sans); font-weight:500; font-size:16px; line-height:24px; letter-spacing:0;
+  padding:0 24px; height:48px; border-radius:9999px;
+  background:var(--v-btn-bg); color:var(--v-btn-fg); border:1px solid var(--v-btn-bg); box-shadow:none;
+  transition:transform .15s ease, opacity .15s ease, box-shadow .2s ease;
+}
+#startBtn.neon-btn:hover{
+  transform:translateY(-2px); color:var(--v-btn-fg); background:var(--v-btn-bg-hover);
+  box-shadow:0 6px 20px rgba(0,0,0,.18);
+}
+#startBtn.neon-btn:active{transform:translateY(0);}
+#startBtn.neon-btn:disabled{opacity:.35; cursor:not-allowed; pointer-events:none; transform:none; box-shadow:none;}
+
+@media(max-width:680px){
+  .opts{flex-direction:column; align-items:stretch; gap:18px;}
+  #startBtn.neon-btn{margin-left:0; width:100%;}
+}
+@media(prefers-reduced-motion:reduce){
+  .card, #start .neon-btn{transition:none;}
+}
