@@ -1,0 +1,6 @@
+.claude/
+.wrangler/
+CLAUDE.md
+DESIGN.md
+wrangler.jsonc
+.assetsignore
