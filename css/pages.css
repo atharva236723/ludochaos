@@ -1,0 +1,326 @@
+/* =====================================================================
+   CONTENT PAGES — the standalone informational documents reached from the
+   navbar: about.html / privacy.html / terms.html / contact.html and the
+   profile page. Each is a real page (this is an MPA), so the styling here is
+   for a normal scrolling document: a centered frosted-glass card on the dark,
+   orb-lit background, with its contents easing in on load.
+
+   The cross-page swap itself is animated by the View Transitions API in
+   css/base.css; the .page-card / stagger animations below are the per-page
+   "settle in" once the new document has loaded.
+===================================================================== */
+
+/* a content document lays its card out in a centered column */
+body.doc{
+  justify-content:flex-start;
+  padding-bottom:0;            /* footer provides the bottom spacing */
+}
+
+.page-wrap{
+  width:min(820px,100%);
+  margin:clamp(16px,4vw,40px) auto auto;
+  flex:1 0 auto;
+}
+
+/* ---- the white Vercel card: canvas, hairline ring, stacked shadow ---- */
+.page-card{
+  position:relative;
+  background:var(--v-canvas);
+  border:1px solid var(--v-hairline);
+  border-radius:16px;
+  box-shadow:var(--v-elev-4);
+  padding:clamp(24px,4.5vw,46px);
+  overflow:hidden;
+  animation:cardIn .55s cubic-bezier(.22,1,.36,1) both;
+}
+/* a thin mesh-gradient accent across the very top edge */
+.page-card::before{
+  content:""; position:absolute; inset:0 0 auto 0; height:3px;
+  background:linear-gradient(90deg, var(--v-g-blue), var(--v-g-violet) 40%, var(--v-g-pink) 70%, var(--v-g-amber));
+}
+@keyframes cardIn{
+  0%  {opacity:0; transform:translateY(26px) scale(.98);}
+  100%{opacity:1; transform:translateY(0)    scale(1);}
+}
+
+/* heading: emoji badge + ink display title */
+.page-head{display:flex; align-items:center; gap:16px; margin-bottom:4px;}
+.page-badge{
+  width:56px; height:56px; flex:0 0 auto; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; font-size:26px;
+  background:var(--v-canvas-soft); border:1px solid var(--v-hairline);
+  box-shadow:var(--v-elev-2);
+}
+.page-card h1, .page-card h2{
+  font-family:var(--v-sans); font-size:clamp(26px,4.4vw,38px); font-weight:600;
+  letter-spacing:-.035em; line-height:1.05; color:var(--v-ink);
+}
+.page-tag{
+  font-family:var(--v-mono); font-size:12px; line-height:16px; letter-spacing:.02em;
+  text-transform:uppercase; color:var(--v-mute); margin:6px 0 22px;
+}
+
+.page-card h3{font-family:var(--v-sans); font-size:18px; font-weight:600;
+  letter-spacing:-.01em; margin:26px 0 8px; color:var(--v-ink);}
+.page-card p, .page-card li{font-size:15px; line-height:1.7; color:var(--v-body);}
+.page-card p{margin-bottom:13px;}
+.page-card ul{margin:0 0 13px 20px;} .page-card li{margin-bottom:7px;}
+.page-card b{color:var(--v-ink); font-weight:500;}
+.page-card a:not(.page-btn){color:var(--v-link); text-decoration:none;}
+.page-card a:not(.page-btn):hover{text-decoration:underline;}
+
+/* inner blocks rise in, staggered, after the card lands */
+.page-card > *{animation:blockIn .55s ease both;}
+.page-card > *:nth-child(1){animation-delay:.10s;}
+.page-card > *:nth-child(2){animation-delay:.16s;}
+.page-card > *:nth-child(3){animation-delay:.22s;}
+.page-card > *:nth-child(4){animation-delay:.28s;}
+.page-card > *:nth-child(5){animation-delay:.34s;}
+.page-card > *:nth-child(6){animation-delay:.40s;}
+.page-card > *:nth-child(n+7){animation-delay:.46s;}
+@keyframes blockIn{0%{opacity:0; transform:translateY(16px);}100%{opacity:1; transform:translateY(0);}}
+
+/* =====================================================================
+   BEAUTIFUL BUTTON — the shared call-to-action used across the pages.
+   Gradient fill, glossy highlight, a sheen that sweeps across on hover,
+   and a gentle lift. (.play-btn on the landing keeps its own look.)
+===================================================================== */
+.page-btn{
+  position:relative; align-self:flex-start; margin-top:6px;
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  border:1px solid var(--v-btn-bg);
+  padding:0 24px; height:48px; border-radius:9999px; font-weight:500; font-size:16px;
+  line-height:24px; letter-spacing:0; font-family:var(--v-sans);
+  color:var(--v-btn-fg); text-shadow:none; text-decoration:none;
+  background:var(--v-btn-bg);
+  box-shadow:var(--v-elev-2);
+  transition:transform .15s ease, box-shadow .2s ease, background .15s ease;
+}
+.page-btn:hover{
+  transform:translateY(-2px); background:var(--v-btn-bg-hover); color:var(--v-btn-fg);
+  box-shadow:0 6px 20px rgba(0,0,0,.18);
+}
+.page-btn:active{transform:translateY(0);}
+.page-btn:disabled{opacity:.5; cursor:default; transform:none;}
+
+/* a quieter secondary button (e.g. "Back to the game") — the white pill */
+.btn-ghost{
+  color:var(--v-ink); background:var(--v-canvas); border:1px solid var(--v-hairline);
+  text-shadow:none; box-shadow:var(--v-elev-2);
+}
+.btn-ghost:hover{background:var(--v-canvas-soft-2); color:var(--v-ink);
+  border-color:var(--v-hairline-strong); box-shadow:var(--v-elev-3);}
+
+/* ---- profile page ---- */
+.profile-top{display:flex; align-items:center; gap:20px; margin-bottom:6px;}
+/* the avatar keeps the player's chosen colour — identity, like the game tokens */
+.profile-pic{
+  width:84px; height:84px; flex:0 0 auto; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:38px; color:#fff; font-weight:600;
+  background:linear-gradient(135deg,var(--green),#1fd1a5 45%,var(--blue));
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.4), var(--v-elev-3);
+}
+.profile-pic.emoji{font-size:46px;}
+.profile-name{font-size:24px; font-weight:600; letter-spacing:-.02em; color:var(--v-ink);}
+.profile-sub{font-size:13px; color:var(--v-mute);}
+/* avatar upload wrapper — keeps the overlay perfectly aligned to the circle */
+.profile-pic-wrap{
+  position:relative; flex:0 0 auto;
+  width:84px; height:84px; border-radius:50%; cursor:pointer;
+}
+.profile-pic-wrap .profile-pic{ width:100%; height:100%; flex:none; }
+.avatar-overlay{
+  position:absolute; inset:0; border-radius:50%;
+  background:rgba(0,0,0,.48); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity .18s ease; pointer-events:none;
+}
+.profile-pic-wrap:hover .avatar-overlay,
+.profile-pic-wrap:focus-visible .avatar-overlay{ opacity:1; }
+.profile-pic.has-pfp{ font-size:0; } /* suppress letter/emoji when photo is set */
+
+.profile-stats{display:flex; gap:14px; flex-wrap:wrap; margin:22px 0;}
+.pstat{
+  flex:1 1 130px; border-radius:12px; padding:16px 18px;
+  background:var(--v-canvas-soft); border:1px solid var(--v-hairline);
+  box-shadow:var(--v-elev-2);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.pstat:hover{transform:translateY(-3px); box-shadow:var(--v-elev-3); border-color:var(--v-hairline-strong);}
+.pstat .num{font-size:26px; font-weight:600; letter-spacing:-.02em; color:var(--v-ink);}
+.pstat .lab{font-family:var(--v-mono); font-size:11px; color:var(--v-mute);
+  text-transform:uppercase; letter-spacing:.06em; margin-top:2px;}
+
+/* ---- profile customization controls ---- */
+.saved-tag{
+  font-family:var(--v-mono); font-size:11px; font-weight:400; letter-spacing:.04em; text-transform:uppercase;
+  color:var(--v-link); background:var(--v-canvas-soft); border:1px solid var(--v-hairline);
+  padding:2px 9px; border-radius:9999px; vertical-align:middle; margin-left:8px;
+  opacity:0; transform:translateY(-2px); transition:opacity .2s ease, transform .2s ease;
+}
+.saved-tag.show{opacity:1; transform:translateY(0);}
+.page-card h3 .hint{font-family:var(--v-sans); font-size:13px; font-weight:400; color:var(--v-mute);
+  letter-spacing:0; text-transform:none;}
+
+.pref-field{margin:0 0 16px;}
+.pref-field > label{display:block; font-size:13px; color:var(--v-body); margin-bottom:8px;}
+.pref-field .hint{color:var(--v-mute);}
+.pref-field input[type=text]{
+  width:100%; background:var(--v-canvas); border:1px solid var(--v-hairline); color:var(--v-ink);
+  border-radius:8px; padding:11px 14px; font-family:var(--v-sans); font-size:14px;
+  transition:border-color .15s, box-shadow .15s;
+}
+.pref-field input[type=text]::placeholder{color:var(--v-mute);}
+.pref-field input[type=text]:focus{
+  outline:none; border-color:var(--v-link);
+  box-shadow:0 0 0 3px rgba(0,124,240,.18);
+}
+.pref-inline{display:flex; align-items:center; justify-content:space-between; gap:14px;}
+.pref-inline > label{margin-bottom:0;}
+
+/* colour swatches — keep the four player colours as filled chips */
+.swatches{display:flex; gap:12px;}
+.swatch{
+  width:38px; height:38px; border-radius:50%; cursor:pointer; padding:0;
+  background:var(--sw); border:2px solid transparent; box-shadow:inset 0 1px 2px rgba(0,0,0,.2);
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.swatch:hover{transform:scale(1.08);}
+.swatch.on{border-color:var(--v-ink); box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--v-ink);}
+
+/* segmented option buttons (mode / players / opponent) — white pill, .on flips ink */
+.seg-pref{display:inline-flex; flex-wrap:wrap; gap:8px;}
+.opt-btn{
+  cursor:pointer; font-family:var(--v-sans); font-size:14px; font-weight:500; color:var(--v-ink);
+  padding:9px 18px; border-radius:9999px;
+  background:var(--v-canvas); border:1px solid var(--v-hairline);
+  transition:transform .12s ease, background .15s ease, border-color .15s ease, color .15s ease;
+}
+.opt-btn:hover{background:var(--v-canvas-soft-2); border-color:var(--v-hairline-strong);}
+.opt-btn.on{
+  background:var(--v-btn-bg); color:var(--v-btn-fg); border-color:var(--v-btn-bg);
+}
+
+/* on/off switch (sound) — off gray, on ink */
+.switch{
+  position:relative; width:46px; height:26px; flex:0 0 auto; cursor:pointer; padding:0;
+  border-radius:999px; background:var(--v-canvas-soft-2); border:1px solid var(--v-hairline-strong);
+  transition:background .18s ease, border-color .18s ease;
+}
+.switch > span{
+  position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .18s ease;
+}
+.switch.on{background:var(--v-ink); border-color:var(--v-ink);}
+.switch.on > span{transform:translateX(20px); background:#fff;}
+
+/* tagline shown under the profile name */
+.profile-tag{font-size:13px; font-weight:500; color:var(--v-body); margin:2px 0 1px;}
+
+/* emoji avatar picker */
+.emoji-grid{display:flex; flex-wrap:wrap; gap:10px;}
+.emoji-opt{
+  width:46px; height:46px; border-radius:12px; cursor:pointer; padding:0;
+  display:flex; align-items:center; justify-content:center; font-size:24px; line-height:1;
+  color:var(--v-ink); background:var(--v-canvas); border:1px solid var(--v-hairline);
+  transition:transform .15s ease, background .15s ease, border-color .15s ease;
+}
+.emoji-opt:hover{transform:translateY(-2px); background:var(--v-canvas-soft-2); border-color:var(--v-hairline-strong);}
+.emoji-opt.on{border-color:var(--v-ink); box-shadow:0 0 0 2px var(--v-ink);
+  background:var(--v-canvas);}
+.emoji-opt[data-emoji=""]{font-size:15px; font-weight:600; letter-spacing:-.5px; color:var(--v-body);}
+
+/* accent-theme swatches — gradient-filled, like the colour swatches */
+.accent-sw{box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);}
+
+/* range slider (volume) — hairline track, ink thumb */
+.slider{
+  -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:999px;
+  background:var(--v-canvas-soft-2); border:1px solid var(--v-hairline); cursor:pointer; outline:none;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:18px; height:18px; border-radius:50%;
+  background:var(--v-ink); border:2px solid #fff; cursor:pointer; box-shadow:var(--v-elev-2);
+}
+.slider::-moz-range-thumb{
+  width:16px; height:16px; border-radius:50%;
+  background:var(--v-ink); border:2px solid #fff; cursor:pointer; box-shadow:var(--v-elev-2);
+}
+
+.pref-actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;}
+.pref-actions .page-btn{margin-top:0;}
+
+/* save button — green "Saved ✓" flash on commit */
+.btn-save{ transition:background .22s ease, border-color .22s ease, transform .15s ease, box-shadow .2s ease; }
+.btn-save.just-saved{
+  background:linear-gradient(120deg,#10b981,#34d399); border-color:#10b981; color:#fff; text-shadow:none;
+}
+
+/* ---- contact form ---- */
+.contact-form{display:flex; flex-direction:column; gap:14px; margin-top:8px;}
+.field{display:flex; flex-direction:column; gap:6px;}
+.contact-form label{font-size:13px; color:var(--v-body);}
+.contact-form input, .contact-form textarea{
+  width:100%; background:var(--v-canvas); border:1px solid var(--v-hairline); color:var(--v-ink);
+  border-radius:8px; padding:11px 14px; font-family:var(--v-sans); font-size:14px; resize:vertical;
+  transition:border-color .15s, box-shadow .15s;
+}
+.contact-form input::placeholder, .contact-form textarea::placeholder{color:var(--v-mute);}
+.contact-form input:focus, .contact-form textarea:focus{
+  outline:none; border-color:var(--v-link);
+  box-shadow:0 0 0 3px rgba(0,124,240,.18);
+}
+.contact-form input:disabled, .contact-form textarea:disabled{opacity:.6;}
+
+/* =====================================================================
+   ERROR PAGES — 404 / 500 / 403, etc. Reuse the .page-card chrome but
+   centre a giant glowing status code above the message. The card itself
+   is vertically centred in the viewport rather than top-aligned.
+===================================================================== */
+body.err{justify-content:center;}
+.err .page-wrap{margin:auto;}
+.err .page-card{text-align:center;}
+.err .page-head{flex-direction:column; gap:6px; margin-bottom:2px;}
+
+.err-code{
+  font-family:var(--v-sans); font-size:clamp(74px,18vw,150px); font-weight:600;
+  line-height:.9; letter-spacing:-.05em;
+  /* the mesh gradient clipped to the giant status code — hero-scale brand moment */
+  background:linear-gradient(120deg, var(--v-g-blue), var(--v-g-violet) 40%, var(--v-g-pink) 70%, var(--v-g-amber));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:errFloat 4s ease-in-out infinite;
+}
+@keyframes errFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+.err .page-card h1{font-size:clamp(22px,4vw,32px);}
+.err .page-tag{margin:6px 0 20px;}
+.err .page-card p{max-width:46ch; margin-left:auto; margin-right:auto;}
+
+/* the action buttons sit centred, side by side */
+.err-actions{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:8px;}
+.err-actions .page-btn{align-self:center;}
+
+@media(prefers-reduced-motion:reduce){ .err-code{animation:none;} }
+
+/* =====================================================================
+   FOOTER — injected on every page by js/nav.js.
+===================================================================== */
+#site-footer{
+  width:100%; margin-top:48px; padding:34px clamp(16px,4vw,40px) 38px;
+  display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;
+  background:var(--v-canvas); border-top:1px solid var(--v-hairline);
+}
+/* the live board owns the full screen — hide the footer while a game is on */
+body.in-game #site-footer{display:none;}
+.foot-brand{font-family:var(--v-sans); font-weight:600; font-size:17px; letter-spacing:-.02em; color:var(--v-ink);}
+.foot-links{display:flex; flex-wrap:wrap; justify-content:center; gap:6px 4px;}
+.foot-links a{
+  color:var(--v-body); text-decoration:none; font-size:13.5px; font-family:var(--v-sans);
+  padding:6px 12px; border-radius:9999px; transition:.15s;
+}
+.foot-links a:hover{color:var(--v-ink); background:var(--v-canvas-soft-2);}
+.foot-copy{font-family:var(--v-mono); font-size:12px; color:var(--v-mute);}
+
+@media(prefers-reduced-motion:reduce){
+  .page-card, .page-card > *{animation:none !important;}
+}
