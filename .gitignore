@@ -19,3 +19,8 @@ npm-debug.log*
 # Node (if ever added)
 node_modules/
 package-lock.json
+
+# Environment secrets
+.env
+.env.*
+.dev.vars
