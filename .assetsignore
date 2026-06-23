@@ -1,7 +1,13 @@
+.git/
 .claude/
 .wrangler/
 CLAUDE.md
 DESIGN.md
+CHANGELOG.md
+SECURITY.md
+README.md
+.editorconfig
+.gitignore
 wrangler.jsonc
 .assetsignore
 download-logo.html
