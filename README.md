@@ -5,6 +5,8 @@
 [![Vanilla JS](https://img.shields.io/badge/Built%20with-Vanilla%20JS-f7df1e?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Cloudflare Workers](https://img.shields.io/badge/Deployed%20on-Cloudflare%20Workers-f38020?style=flat-square&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com)
 
+[![Ludo Chaos — game screenshot](screenshot.png)](https://ludochaos.com)
+
 A feature-rich browser Ludo game with two distinct rule sets, real-time online multiplayer, an AI opponent, and full profile customization — all in vanilla HTML, CSS, and JavaScript with no build step and no frameworks.
 
 ---
