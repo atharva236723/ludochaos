@@ -115,13 +115,37 @@
   measure();
   window.addEventListener('resize', measure);
 
-  /* ---------- contact form: static demo, acknowledge in place ---------- */
+  /* ---------- contact form: sends via Web3Forms → Gmail inbox ---------- */
   const cform = document.getElementById('contactForm');
-  if(cform) cform.addEventListener('submit', e => {
+  if(cform) cform.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = cform.querySelector('.page-btn');
-    btn.textContent = 'Message sent ✓';
+    const name    = document.getElementById('cf-name').value.trim();
+    const email   = document.getElementById('cf-email').value.trim();
+    const message = document.getElementById('cf-msg').value.trim();
+
+    btn.textContent = 'Sending…';
     btn.disabled = true;
-    cform.querySelectorAll('input,textarea').forEach(el => el.disabled = true);
+
+    try {
+      const res = await fetch('https://formspree.io/f/mgojoeyj', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ name, email, message })
+      });
+      const data = await res.json();
+      if(res.ok) {
+        btn.textContent = 'Message sent ✓';
+        cform.querySelectorAll('input,textarea').forEach(el => el.disabled = true);
+      } else {
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+        alert(data.error || 'Something went wrong. Please try again.');
+      }
+    } catch {
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+      alert('Network error. Please check your connection and try again.');
+    }
   });
 })();
